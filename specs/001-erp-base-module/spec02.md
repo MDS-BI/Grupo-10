@@ -24,7 +24,8 @@ Escenarios de Aceptación:
 
 Dado el formulario de ingreso de personal, cuando el administrador completa los datos obligatorios (RUT, cargo, sueldo, fecha de inicio) y sube los documentos requeridos, entonces el perfil del empleado se crea exitosamente en el sistema.
 
-Dada la creación del perfil, cuando el administrador selecciona la plantilla de contrato correspondiente al cargo, entonces el sistema genera un documento editable con los datos precargados del colaborador.
+Dada la creación del perfil, cuando el administrador selecciona la plantilla del contrato correspondiente al cargo, entonces el sistema genera un documento editable y con los datos precargados del colaborador
+
 ---
 
 Historia de Usuario 3 - Aprobación de solicitudes de vacaciones y permisos (Prioridad: P1)
