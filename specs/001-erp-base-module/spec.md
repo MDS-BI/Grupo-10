@@ -1,8 +1,8 @@
 # Especificación de la Funcionalidad: Módulo de Recursos Humanos y Planilla (HR / Payroll)
 
 **Rama de la funcionalidad**: 002-rrhh-planilla  
-**Creada**: 2026-07-08
-**Estado**: Borrador
+**Creada**: 2026-07-08  
+**Estado**: Borrador  
 **Entrada**: Descripción del usuario: "Gestionar la información del personal y la administración de recursos humanos: fichas laborales, contratos, permisos, asistencia, beneficios, evaluaciones y nóminas de pago, sobre el modelo relacional oficial del ERP."
 
 ## Propósito
@@ -10,42 +10,6 @@
 Este proyecto implementa el módulo de Recursos Humanos y Planilla (HR / Payroll) sobre el módulo base de ERP. Reutiliza los patrones de datos maestros, documentos, navegación, validación, persistencia y búsqueda del ERP base, y los extiende con las 14 tablas del módulo HR/Payroll definidas en `erp_data_model.md`: estructura organizacional, personal, contratos, permisos, asistencia, nómina, beneficios y desempeño.
 
 El objetivo del MVP es centralizar las fichas laborales, formalizar contratos, gestionar permisos de forma trazable, registrar asistencia y simular la liquidación mensual, con control de acceso por roles y protección de datos sensibles. La arquitectura de datos y las claves foráneas oficiales se detallan en `erp_data_model.md` (sección 1); `data-model.md` es la vista de negocio en español del mismo módulo. El alcance y los roles se detallan en `plan.md`.
-
-## Alcance del MVP
-
-1. **Panel de inicio**: KPIs de dotación activa, ausentismo, solicitudes pendientes y costo de la última nómina, con acciones rápidas.
-2. **Fichas y contratos**: alta, edición, baja lógica y consulta filtrable de colaboradores y contratos.
-3. **Simulador de liquidación**: cálculo y desglose de haberes, deducciones y sueldo líquido por colaborador y período.
-4. **Gestión de permisos**: autoservicio del empleado y bandeja de aprobación de la jefatura.
-5. **Asistencia**: registro y consulta de jornadas para alimentar ausentismo y horas efectivas.
-6. **Seguridad**: autenticación simulada y autorización por roles.
-
-**Fuera del alcance del MVP**: motor legal de impuestos y finiquitos, transferencias bancarias, firma electrónica, integraciones contables reales, interfaz de beneficios y evaluaciones de desempeño (tablas modeladas), reclutamiento, capacitación y planificación de turnos.
-
-## Mapeo entre Terminología de Negocio y Tablas del ERP
-
-La especificación usa términos de negocio en español; las tablas, claves primarias y claves foráneas oficiales se rigen por `erp_data_model.md`.
-
-| Término de negocio | Tabla oficial | Clave primaria | Uso en el módulo |
-|---|---|---|---|
-| Departamento | `departments` | `department_id` | Estructura organizacional y dotación. |
-| Cargo | `job_titles` | `job_title_id` | Puesto y banda jerárquica o salarial. |
-| Colaborador / Empleado | `employees` | `employee_id` | Maestro transversal de personal. |
-| Contrato | `employee_contracts` | `contract_id` | Vigencia, tipo, salario base y moneda. |
-| Tipo de permiso | `leave_types` | `leave_type_id` | Catálogo de ausencias y si son remuneradas. |
-| Solicitud de permiso | `leave_requests` | `leave_request_id` | Solicitudes de vacaciones o permisos. |
-| Asistencia | `attendance_records` | `attendance_id` | Marcación diaria y horas trabajadas. |
-| Concepto de nómina | `payroll_concepts` | `concept_id` | Haberes y deducciones. |
-| Período de nómina | `payroll_runs` | `payroll_run_id` | Corrida mensual y su estado. |
-| Liquidación / Papeleta | `payslips` | `payslip_id` | Resultado por colaborador y período. |
-| Detalle de liquidación | `payslip_lines` | `payslip_line_id` | Renglones de haberes y deducciones. |
-| Beneficio | `benefits` | `benefit_id` | Catálogo de beneficios. |
-| Beneficio de empleado | `employee_benefits` | `employee_benefit_id` | Inscripción de un colaborador. |
-| Evaluación de desempeño | `performance_reviews` | `review_id` | Evaluación y calificación del colaborador. |
-| Configuración del módulo | No es tabla | — | `ModuleConfig` de la aplicación. |
-| Usuario / Rol | No modelado | — | RBAC en la capa de aplicación. |
-
-**Tablas compartidas del ERP**: `companies`, `currencies`, `cost_centers` y `journal_entries` no forman parte de las 14 tablas del módulo HR/Payroll, pero se usan para la integración multiempresa, monetaria, de centros de costo y contable.
 
 ## Escenarios de Usuario y Pruebas *(obligatorio)*
 
@@ -195,224 +159,111 @@ Como administrador de RRHH, quiero asignar roles y limitar las acciones y los da
 
 ### Casos Límite
 
-- ¿Qué ocurre cuando se intenta guardar un colaborador sin los datos obligatorios o con un RUT inválido o duplicado?
-- ¿Qué ocurre cuando se intenta eliminar un departamento o un cargo que todavía tiene colaboradores asignados?
-- ¿Qué ocurre cuando la fecha de término de un contrato es anterior a la fecha de inicio?
-- ¿Qué ocurre cuando un colaborador tiene dos contratos vigentes con fechas superpuestas?
-- ¿Qué ocurre cuando se intenta registrar un contrato con salario cero, negativo o con una moneda no válida?
-- ¿Qué ocurre cuando se da de baja a un colaborador que tiene permisos pendientes o liquidaciones históricas?
-- ¿Qué ocurre cuando un empleado solicita un cambio de cuenta bancaria sin adjuntar el certificado del banco?
-- ¿Qué ocurre cuando una solicitud de vacaciones excede el saldo de días disponibles?
-- ¿Qué ocurre cuando un colaborador envía dos solicitudes de ausencia con fechas superpuestas?
-- ¿Qué ocurre cuando aprobar una ausencia deja al área por debajo de la dotación mínima?
-- ¿Qué ocurre cuando se registra dos veces la asistencia del mismo colaborador en la misma fecha?
-- ¿Qué ocurre cuando la hora de salida es anterior o igual a la hora de entrada?
-- ¿Qué ocurre cuando se intenta registrar asistencia para un colaborador desvinculado o en una fecha futura?
-- ¿Qué ocurre cuando se intenta liquidar a un colaborador sin contrato vigente en el período?
-- ¿Qué ocurre cuando se intenta generar dos liquidaciones para el mismo colaborador y período?
-- ¿Qué ocurre cuando se intenta modificar una liquidación de un período cerrado?
-- ¿Qué ocurre cuando el sueldo líquido calculado resulta negativo?
-- ¿Qué ocurre cuando no existen períodos de nómina, conceptos o contratos configurados?
-- ¿Qué ocurre cuando un usuario sin rol autorizado intenta ver el salario o la papeleta de otro colaborador?
-- ¿Qué ocurre cuando una jefatura intenta aprobar solicitudes de un área que no le corresponde?
-- ¿Qué ocurre cuando el rol de un usuario cambia mientras tiene la sesión abierta?
-- ¿Qué ocurre cuando un usuario intenta acceder directamente por URL a una pantalla para la que no tiene permiso?
-- ¿Qué ocurre cuando el panel se abre con cero colaboradores, cero solicitudes o cero liquidaciones?
-- ¿Se mantienen intactos los colaboradores, contratos, permisos, asistencias y liquidaciones al navegar entre pantallas?
-- ¿Qué ocurre cuando se introducen caracteres HTML o scripts en nombres, comentarios o descripciones?
+- ¿Qué ocurre cuando un usuario intenta guardar una entidad sin nombre o código obligatorio?
+- ¿Cómo gestiona el sistema una búsqueda que no devuelve coincidencias?
+- ¿Qué ocurre si un usuario intenta editar o eliminar una entidad que ya no existe?
+- ¿Qué ocurre cuando un usuario introduce una fecha objetivo que no es una fecha de calendario válida?
+- ¿Qué ocurre con los documentos de una entidad cuando esta se elimina?
+- ¿Qué ocurre cuando un usuario introduce una fecha final anterior a la fecha inicial en un documento?
+- ¿Qué ocurre cuando la configuración declara un campo personalizado cuya clave choca con un nombre de campo base?
+- ¿Qué ocurre cuando la configuración referencia un tipo de campo desconocido o una definición de transición de ciclo de vida inválida?
+- ¿Qué ocurre cuando los registros almacenados contienen valores de campos personalizados que ya no están declarados en la configuración?
+- ¿Qué ocurre cuando un usuario abre la aplicación directamente en la pantalla de gestión o búsqueda (p. ej., vía enlace profundo o recarga del navegador) sin pasar por el panel de inicio?
+- ¿Qué ocurre cuando un usuario pulsa el botón atrás del navegador estando en la pantalla de gestión o búsqueda?
+- ¿Qué ocurre si un usuario navega fuera de la pantalla de gestión mientras un formulario aún tiene cambios sin guardar?
+- ¿Permanecen intactas las entidades y los documentos al navegar entre el panel, la gestión y la búsqueda?
+- ¿Qué ocurre cuando el panel se abre con cero entidades o cero documentos (valores estadísticos)?
+- ¿Qué ocurre cuando el color de acento configurado no es un valor de color válido?
+- ¿Cómo mantiene la barra lateral contraída las etiquetas de módulo accesibles en ventanas gráficas estrechas?
 
 ## Requisitos *(obligatorio)*
 
 ### Requisitos Funcionales
 
-#### Gestión de personal, estructura y contratos
-
-- **FR-001**: El sistema DEBE permitir crear un registro en `employees` con `first_name`, `last_name`, `email`, `hire_date`, `department_id`, `job_title_id` y `employment_status`; el RUT DEBE ser un campo personalizado obligatorio y único.
-- **FR-002**: El sistema DEBE permitir editar los datos de un colaborador existente en `employees` según los permisos del rol del usuario.
-- **FR-003**: El sistema DEBE permitir dar de baja lógica a un colaborador actualizando `employees.employment_status`, retirándolo de las listas activas y de la búsqueda, sin eliminar su historial en `employee_contracts`, `attendance_records`, `leave_requests` ni `payslips`.
-- **FR-004**: El sistema DEBE permitir buscar y filtrar colaboradores por nombre, RUT, correo electrónico, departamento, cargo y estado laboral.
-- **FR-005**: El sistema DEBE mostrar una lista clara de colaboradores e indicar cuándo ningún resultado coincide con una búsqueda.
-- **FR-006**: El sistema DEBE validar los campos obligatorios, el formato del correo electrónico, el formato y la unicidad del RUT, las fechas y las referencias a departamentos y cargos antes de guardar.
-- **FR-007**: El sistema DEBE presentar retroalimentación clara cuando falta información obligatoria, un dato es inválido o no se puede completar una acción.
-- **FR-008**: El sistema DEBE mantener los datos de colaboradores consistentes tras operaciones de creación, edición y baja.
-- **FR-009**: El sistema DEBE permitir administrar los catálogos `departments` y `job_titles`, incluyendo su creación y edición.
-- **FR-010**: El sistema DEBE impedir la eliminación de un registro de `departments` o `job_titles` que tenga colaboradores o registros asociados, ofreciendo una explicación clara.
-- **FR-011**: El sistema DEBE permitir añadir, editar y cerrar registros de `employee_contracts` asociados a un colaborador, usando `contract_type`, `start_date`, `end_date`, `base_salary` y `currency_code`.
-- **FR-012**: El sistema DEBE validar que `employee_contracts.end_date` sea posterior a `start_date`, que `base_salary` sea mayor que cero, que `currency_code` exista en `currencies` y que no existan contratos vigentes superpuestos para el mismo `employee_id`.
-- **FR-013**: El sistema DEBE preservar el historial de `employee_contracts` cerrados y no eliminarlos físicamente cuando el colaborador tenga `payslips` asociados por `employee_id`.
-- **FR-014**: El sistema DEBE mostrar un panel de inicio como vista inicial, con acciones rápidas para crear colaborador, crear contrato, revisar permisos, ejecutar nómina y buscar registros, junto con tarjetas calculadas desde `employees`, `leave_requests`, `attendance_records` y `payroll_runs`.
-- **FR-015**: El sistema DEBE envolver cada pantalla en un marco de espacio de trabajo persistente con barra superior y barra lateral para Panel, Empleados, Contratos, Permisos, Asistencia, Nómina y Buscar, resaltando el módulo activo.
-- **FR-016**: El sistema DEBE ofrecer una pantalla de búsqueda dedicada sobre `employees`, accesible desde la barra lateral y desde las acciones rápidas del panel, con filtros por nombre, RUT, correo, departamento, cargo y estado.
-- **FR-017**: El sistema DEBE mantener los datos de colaboradores, contratos, permisos, asistencias y liquidaciones intactos y consistentes durante la navegación entre pantallas.
-- **FR-018**: El sistema DEBE cargar la configuración del módulo (`ModuleConfig`) al arrancar y aplicarla en todas las pantallas, incluyendo nombre del módulo, terminología, campos personalizados, reglas y marca.
-- **FR-019**: El sistema DEBE retroceder a los valores predeterminados del módulo base cuando no se proporcione configuración, e informar claramente cuando la configuración sea inválida o conflictiva.
-- **FR-020**: El sistema DEBE derivar las etiquetas visibles para el usuario de la configuración del módulo, de modo que Entidad se presente como Empleado y Documento como Contrato en el contexto de RRHH y Planilla.
-- **FR-021**: El sistema DEBE mostrar los campos personalizados declarados en la configuración, como RUT y datos bancarios, en formularios, listas y búsqueda, con el tipo de entrada y la validación correspondientes.
-- **FR-022**: El sistema DEBE sanitizar el contenido introducido por los usuarios antes de renderizarlo en el DOM para prevenir ataques de inyección de scripts (XSS).
-
-#### Autoservicio, altas y permisos
-
-- **FR-023**: El sistema DEBE permitir al empleado actualizar sus datos personales y de contacto; el correo institucional, los datos contractuales y los datos salariales solo podrán ser modificados por RRHH.
-- **FR-024**: El sistema DEBE dejar todo cambio de datos bancarios en estado pendiente de validación, exigir el certificado del banco y notificar al administrador de RRHH.
-- **FR-025**: El sistema DEBE permitir registrar un nuevo colaborador validando los datos obligatorios y los documentos legales requeridos antes de crear su perfil.
-- **FR-026**: El sistema DEBE generar un contrato editable con los datos precargados del colaborador a partir de una plantilla asociada al cargo.
-- **FR-027**: El sistema DEBE mostrar a la jefatura las `leave_requests` pendientes de sus subordinados directos, identificados por `employees.manager_id`, junto con el saldo de días disponible.
-- **FR-028**: El sistema DEBE permitir a la jefatura aprobar o rechazar una `leave_request` con un comentario opcional, actualizando `leave_requests.status`, el saldo del empleado y la cobertura del área.
-- **FR-029**: El sistema DEBE detectar y advertir cuando una `leave_request` aprobada genere un conflicto de dotación mínima en el área, permitiendo rechazarla con un motivo.
-- **FR-030**: El sistema DEBE notificar al empleado cada vez que cambie el estado de una solicitud, contrato o liquidación que le afecte.
-
-#### Asistencia
-
-- **FR-031**: El sistema DEBE permitir registrar la asistencia diaria en `attendance_records` con `employee_id`, `work_date`, `check_in`, `check_out` y `hours_worked`.
-- **FR-032**: El sistema DEBE validar que exista un solo registro de `attendance_records` por `employee_id` y `work_date`, que `check_out` sea posterior a `check_in` y que `work_date` no sea futura.
-- **FR-033**: El sistema DEBE permitir consultar `attendance_records` y `leave_requests` por colaborador, área y período, mostrando horas trabajadas y ausencias.
-- **FR-034**: El sistema DEBE impedir el registro de asistencia para colaboradores con `employees.employment_status` de desvinculado, conservando sus registros históricos.
-
-#### Nómina
-
-- **FR-035**: El sistema DEBE permitir administrar registros de `payroll_runs` con `period_start`, `period_end`, `run_date` y `status` (borrador, calculado, aprobado o cerrado).
-- **FR-036**: El sistema DEBE calcular la liquidación de un colaborador para un `payroll_run` a partir de su `employee_contracts` vigente y de los `payroll_concepts` configurados.
-- **FR-037**: El sistema DEBE guardar el resultado en `payslips` y sus detalles en `payslip_lines`, mostrando `gross_pay`, la suma de deducciones y `net_pay`.
-- **FR-038**: El sistema DEBE impedir la generación de más de un `payslip` por `employee_id` y `payroll_run_id`, y rechazar la liquidación de colaboradores sin `employee_contracts` vigente.
-- **FR-039**: El sistema DEBE impedir la modificación de `payslips` cuando `payroll_runs.status` esté cerrado; solo un usuario autorizado podrá reabrir el período dejando registro de auditoría.
-- **FR-040**: El sistema DEBE permitir al empleado consultar y descargar únicamente sus propios `payslips`.
-- **FR-041**: El sistema DEBE permitir al encargado de nómina ejecutar y cerrar el `payroll_run`, generando una referencia en `journal_entries` con `source_module = 'payroll'` y `source_reference_id = payroll_run_id`.
-- **FR-042**: El sistema DEBE calcular el costo de la última nómina desde `payslips` y el ausentismo desde `attendance_records` y `leave_requests` para las tarjetas del panel.
-
-#### Seguridad, roles y datos sensibles
-
-- **FR-043**: El sistema DEBE implementar cuatro roles: Administrador de RRHH, Encargado de Nómina, Jefatura o Supervisor y Empleado.
-- **FR-044**: El sistema DEBE aplicar los permisos por rol y por alcance de datos; la jefatura solo podrá operar sobre sus subordinados directos.
-- **FR-045**: El sistema DEBE restringir el salario base y los datos bancarios al administrador de RRHH, al encargado de nómina y al propio empleado; la jefatura no podrá ver el salario base.
-- **FR-046**: El sistema DEBE restringir los datos médicos al administrador de RRHH y al propio empleado, sin acceso para la jefatura ni para el encargado de nómina.
-- **FR-047**: El sistema DEBE denegar el acceso a pantallas, acciones y URLs no autorizadas, mostrando un mensaje claro y sin revelar datos sensibles ni la existencia de registros protegidos.
-- **FR-048**: El sistema DEBE denegar el acceso a usuarios sin rol asignado y aplicar los cambios de rol en el siguiente inicio de sesión.
-- **FR-049**: El sistema DEBE registrar una auditoría de aprobaciones de permisos, cambios de liquidaciones, cierres de período y cambios de roles, indicando usuario, acción y fecha.
-- **FR-050**: El sistema DEBE enmascarar o truncar datos sensibles, como cuentas bancarias y montos salariales, en listas y exportaciones para los roles que no tienen acceso completo.
-
-#### Calidad, integridad y rendimiento
-
-- **FR-051**: El sistema DEBE mantener el renderizado de listas, la búsqueda y los cálculos ágiles para un conjunto de al menos 500 colaboradores.
-- **FR-052**: Las estadísticas y los KPIs del panel DEBEN coincidir con los registros de `employees`, `leave_requests`, `attendance_records` y `payslips` almacenados.
-- **FR-053**: El sistema DEBE persistir los datos en el almacenamiento local del navegador y mantenerlos intactos durante la navegación y recarga de pantallas.
-- **FR-054**: El sistema DEBE mantener la consistencia de los datos tras altas, ediciones, bajas, aprobaciones de permisos, registros de asistencia y ejecuciones de nómina.
-- **FR-055**: El sistema DEBE aplicar integridad referencial entre `employees`, `employee_contracts`, `leave_requests`, `attendance_records`, `payroll_runs`, `payslips` y `payslip_lines`, impidiendo registros huérfanos o referencias inexistentes.
-
-### Reglas de Negocio Clave
-
-- **RN-001**: `payslips.gross_pay` es la suma de los conceptos de tipo `earning` registrados en `payslip_lines`, y `payslips.net_pay` se calcula como `gross_pay` menos la suma de los conceptos de tipo `deduction`.
-- **RN-002**: Cada colaborador puede tener como máximo un `payslip` por `payroll_run`.
-- **RN-003**: El saldo de vacaciones es un valor derivado de la asignación anual configurada y de las `leave_requests` aprobadas; las ausencias con `leave_types.is_paid = false` se descuentan en la liquidación y las remuneradas no.
-- **RN-004**: Un colaborador no puede tener dos `employee_contracts` vigentes con fechas superpuestas.
-- **RN-005**: La baja de un colaborador es lógica mediante `employees.employment_status`: se retira de las listas activas y de la búsqueda, pero se conserva su historial legal y de nómina.
-- **RN-006**: La jefatura solo puede ver y aprobar `leave_requests` de sus subordinados directos según `employees.manager_id`.
-- **RN-007**: `employee_contracts.base_salary` y los datos bancarios personalizados son confidenciales y solo se muestran a los roles autorizados y al propio empleado.
-- **RN-008**: La dotación mínima se configura por `departments.department_id` y se evalúa al aprobar permisos que afecten la cobertura del área.
-- **RN-009**: Un `payroll_run` cerrado es inmutable; su reapertura requiere autorización y deja registro de auditoría.
-- **RN-010**: Toda aprobación, cambio de rol, modificación de `payslips` y cierre de `payroll_run` debe quedar auditado en la capa de aplicación.
+- **FR-001**: El sistema DEBE permitir a los usuarios crear un registro de entidad con al menos un nombre y un código.
+- **FR-002**: El sistema DEBE permitir a los usuarios editar los detalles de un registro de entidad existente.
+- **FR-003**: El sistema DEBE permitir a los usuarios eliminar un registro de entidad existente.
+- **FR-004**: El sistema DEBE permitir a los usuarios buscar registros de entidad por nombre, código, categoría u otras palabras clave descriptivas.
+- **FR-005**: El sistema DEBE mostrar una lista clara de entidades e indicar cuándo ningún resultado coincide con una búsqueda.
+- **FR-006**: El sistema DEBE presentar retroalimentación clara cuando falta información obligatoria o no se puede completar una acción.
+- **FR-007**: El sistema DEBE mantener los datos de entidad consistentes tras operaciones de creación, edición y eliminación.
+- **FR-008**: El sistema DEBE permitir a los usuarios añadir, editar y eliminar detalles de documentos de una entidad.
+- **FR-009**: El sistema DEBE asociar cada documento exactamente a una entidad y eliminar los documentos asociados cuando la entidad se elimina.
+- **FR-010**: El sistema DEBE mostrar un panel de inicio como vista inicial, con botones de acción rápida claramente etiquetados para las tareas ERP clave.
+- **FR-011**: El sistema DEBE envolver cada pantalla en un marco de espacio de trabajo persistente compuesto por una barra superior con marca y una barra lateral de navegación de módulos.
+- **FR-012**: La barra lateral DEBE proporcionar botones de módulo para Panel, Entidades, Documentos y Buscar, etiquetados desde la configuración del módulo.
+- **FR-013**: El botón de módulo Entidades DEBE mostrar el contenido de gestión de entidades.
+- **FR-014**: El botón de módulo Documentos DEBE mostrar el contenido de gestión de documentos en la pantalla de gestión.
+- **FR-015**: El botón de módulo Panel DEBE devolver al usuario al panel de inicio.
+- **FR-016**: La pantalla de gestión NO DEBE mostrar la lista de entidades.
+- **FR-017**: La pantalla de gestión DEBE proporcionar la funcionalidad de crear, editar y eliminar entidades.
+- **FR-018**: La pantalla de gestión DEBE proporcionar la funcionalidad de crear, editar y eliminar documentos.
+- **FR-019**: El sistema DEBE navegar a una pantalla de búsqueda dedicada cuando se selecciona el botón Buscar en la barra lateral.
+- **FR-020**: La pantalla de búsqueda DEBE permitir buscar entidades por nombre, código, categoría, descripción o fecha objetivo.
+- **FR-021**: La pantalla de búsqueda DEBE ser accesible tanto desde la barra lateral como desde la acción rápida de buscar registros del panel.
+- **FR-022**: El sistema DEBE mantener los datos de entidades y documentos intactos y consistentes durante la navegación entre pantallas.
+- **FR-023**: El sistema DEBE cargar la configuración del módulo al arrancar y aplicarla en todas las pantallas.
+- **FR-024**: El sistema DEBE retroceder a los valores predeterminados integrados (terminología Entidad/Documento, sin campos personalizados, sin ciclo de vida) cuando no se proporciona configuración.
+- **FR-025**: El sistema DEBE informar claramente de una configuración inválida o conflictiva en lugar de fallar silenciosamente.
+- **FR-026**: El sistema DEBE mostrar los campos personalizados declarados en los formularios de creación/edición con tipos de entrada que coincidan con sus tipos declarados.
+- **FR-027**: El sistema DEBE validar los valores de campos personalizados, incluidos los obligatorios, antes de guardar, usando la misma experiencia de retroalimentación que la validación base.
+- **FR-028**: El sistema DEBE incluir los valores de campos personalizados en los resultados de búsqueda y mostrarlos en listas y vistas de detalle.
+- **FR-029**: El sistema DEBE derivar todas las etiquetas visibles para el usuario de la configuración del módulo en lugar de texto fijo en el código.
+- **FR-030**: El sistema DEBE aplicar las transiciones de estado configuradas en los documentos independientemente de cómo se envíe un cambio.
+- **FR-031**: El sistema DEBE mantener el estado del documento como texto libre cuando no hay ciclo de vida configurado.
+- **FR-032**: El sistema DEBE mantener el renderizado de listas y la búsqueda ágiles y correctos para conjuntos de datos de al menos 500 registros de entidad.
+- **FR-033**: El panel DEBE ofrecer al menos cuatro botones de acción rápida: nueva entidad, nuevo documento, abrir gestión de entidades y buscar registros.
+- **FR-034**: Activar la acción rápida de nueva entidad o nuevo documento DEBE abrir el área de gestión correspondiente con un formulario vacío listo para introducir datos.
+- **FR-035**: El panel DEBE mostrar tarjetas de estadísticas con el número de entidades y documentos almacenados, actualizadas cada vez que se muestra el panel.
+- **FR-036**: La barra superior DEBE mostrar un logotipo derivado del nombre del módulo junto con el nombre del módulo configurado en cada pantalla.
+- **FR-037**: La barra lateral DEBE resaltar visualmente el módulo activo en cada pantalla.
+- **FR-038**: La configuración PUEDE definir un color de acento; el sistema DEBE aplicarlo consistentemente en todo el marco y retroceder de forma segura a los valores integrados cuando esté ausente o sea inválido.
+- **FR-039**: En ventanas gráficas estrechas, la barra lateral DEBE contraerse a una columna de iconos manteniéndose operable.
 
 ### Requisitos de Extensibilidad *(obligaciones del módulo base)*
 
 Los módulos personalizados construidos sobre esta base DEBEN poder:
 
-- **XR-001**: Extender los registros de `employees` y `employee_contracts` con campos adicionales específicos del dominio, como RUT, teléfono, dirección y datos bancarios, sin cambiar la estructura de almacenamiento base.
-- **XR-002**: Reetiquetar pantallas, pestañas, formularios y listas con terminología de RRHH y Planilla sin alterar el comportamiento de navegación.
+- **XR-001**: Extender los registros de entidad y documento con campos adicionales específicos del dominio sin cambiar la estructura de almacenamiento base.
+- **XR-002**: Reetiquetar pantallas, pestañas, formularios y listas con terminología específica del módulo sin alterar el comportamiento de navegación.
 - **XR-003**: Añadir reglas de validación específicas del módulo junto a las reglas de validación base.
-- **XR-004**: Apoyarse en el módulo base para generación de identidad, marcas de tiempo, integridad referencial y eliminación lógica o en cascada según corresponda.
+- **XR-004**: Apoyarse en el módulo base para generación de identidad, marcas de tiempo, integridad referencial entre entidades y documentos, y eliminación en cascada.
 - **XR-005**: Remarcar el espacio de trabajo —nombre del módulo, logotipo derivado y color de acento— únicamente mediante configuración.
-- **XR-006**: Integrarse con el ERP mediante `company_id`, `currency_code`, `cost_centers` y `journal_entries` de nómina.
-
-### Requisitos de Integración con el ERP
-
-- **IR-001**: `departments.company_id` y `payroll_runs.company_id` DEBEN referenciar `companies.company_id`.
-- **IR-002**: `employee_contracts.currency_code` DEBE referenciar `currencies.currency_code`.
-- **IR-003**: `cost_centers.department_id` DEBE referenciar `departments.department_id`; el cierre de `payroll_runs` DEBE generar una referencia en `journal_entries` con `source_module = 'payroll'` y `source_reference_id = payroll_run_id`.
-- **IR-004**: `employees.employee_id` DEBE actuar como maestro transversal para `sales_orders.employee_id`, `purchase_orders.employee_id`, `quality_inspections.inspector_id` y `customers.assigned_employee_id`, entre otras referencias del ERP.
-- **IR-005**: Los registros de `payslips` DEBEN poder asociarse a los centros de costo a través de `departments` y `cost_centers`, para imputar el gasto de personal.
 
 ### Entidades Clave *(incluir si la funcionalidad implica datos)*
 
-Las 14 tablas del módulo HR/Payroll y su diccionario completo se definen en `erp_data_model.md` (sección 1). `data-model.md` es la vista de negocio en español. Esta especificación las resume según su papel en el módulo:
-
-| Tabla oficial | Descripción | Relaciones clave |
-|---|---|---|
-| `departments` | Área organizacional de la empresa. | `company_id` → `companies`; `manager_employee_id` → `employees`. |
-| `job_titles` | Puesto de trabajo y banda jerárquica o salarial. | `job_title_id` referenciada por `employees`. |
-| `employees` | Maestro del colaborador: nombres, correo, fecha de contratación y estado laboral. | `department_id`; `job_title_id`; `manager_id` (auto-referencia). |
-| `employee_contracts` | Contrato laboral con tipo, vigencia, salario base y moneda. | `employee_id`; `currency_code` → `currencies`. |
-| `leave_types` | Catálogo de tipos de ausencia y si son remunerados. | Referenciada por `leave_requests`. |
-| `leave_requests` | Solicitud de vacaciones o permiso con fechas, estado y aprobador. | `employee_id`, `leave_type_id`, `approved_by` → `employees`. |
-| `attendance_records` | Marcación diaria de entrada, salida y horas trabajadas. | `employee_id`. |
-| `payroll_concepts` | Conceptos de ingreso o deducción aplicables a la nómina. | Referenciada por `payslip_lines`. |
-| `payroll_runs` | Corrida mensual de nómina con fechas y estado. | `company_id` → `companies`; genera `journal_entries`. |
-| `payslips` | Resultado de nómina por colaborador y período. | `payroll_run_id`, `employee_id`. |
-| `payslip_lines` | Renglones de haberes y deducciones de una liquidación. | `payslip_id`, `concept_id`. |
-| `benefits` | Catálogo de beneficios ofrecidos por la empresa. | Referenciada por `employee_benefits`. |
-| `employee_benefits` | Inscripción de un colaborador en un beneficio. | `employee_id`, `benefit_id`. |
-| `performance_reviews` | Evaluación periódica de un colaborador por su evaluador. | `employee_id`, `reviewer_id`. |
-| **ModuleConfig** | Configuración del módulo base: nombre, etiquetas, campos personalizados, reglas y marca. | No es una tabla del ERP; se aplica transversalmente. |
-| **Usuario / Rol** | Capa de seguridad que asigna un rol y un alcance de datos a cada usuario. | No modelada en `erp_data_model.md`; RBAC en la capa de aplicación. |
-
-**Nota de modelado**: RUT, teléfono, dirección, datos bancarios y saldo de vacaciones no existen como columnas en `erp_data_model.md`. Se implementan como campos personalizados o valores derivados declarados en `ModuleConfig`, sin alterar el esquema oficial. `employees.email` es el único dato de contacto oficial; el teléfono y la dirección deben agregarse como extensión. Los documentos legales se almacenan como metadatos vinculados a `employees` o `employee_contracts`, reutilizando el patrón Documento del ERP base.
+- **Entidad**: Un registro de datos maestros gestionado por el módulo, que incluye su nombre, código de negocio, detalles descriptivos, categoría de clasificación, una fecha objetivo opcional y un entity_id autogenerado. Los módulos personalizados definen qué representa una Entidad en el mundo real (p. ej., cliente, producto, activo).
+- **Documento**: Detalles transaccionales adjuntos a una entidad, vinculados a ella por el entity_id de la entidad. Los módulos personalizados definen qué representa un Documento (p. ej., pedido, factura, contrato).
+- **ModuleConfig**: El objeto de adaptación cargado al arrancar que define el nombre del módulo, las etiquetas de terminología, las definiciones de campos personalizados y el ciclo de vida de estados de documentos. Consulte data-model.md para su forma completa.
 
 ## Criterios de Éxito *(obligatorio)*
 
 ### Resultados Medibles
 
-- **SC-001**: Los usuarios de RRHH pueden registrar un nuevo colaborador completo y verlo en la lista en menos de 5 minutos.
-- **SC-002**: Los usuarios pueden encontrar un colaborador existente mediante la búsqueda en menos de 10 segundos tras introducir un término relevante.
-- **SC-003**: Al menos el 90% de los usuarios de prueba pueden completar tareas de alta, edición, búsqueda, aprobación de permisos, registro de asistencia y liquidación sin ayuda.
-- **SC-004**: El sistema sigue siendo utilizable para un conjunto de al menos 500 colaboradores sin pérdida de funcionalidad central.
-- **SC-005**: Un usuario puede alcanzar el panel, las pantallas de gestión y la búsqueda desde la barra lateral en menos de 10 segundos en el primer uso.
-- **SC-006**: Toda la funcionalidad existente de gestión de colaboradores y contratos sigue operativa tras el rediseño del marco ERP y el panel, sin regresiones.
-- **SC-007**: Los usuarios pueden navegar entre las pantallas de panel, gestión, permisos, asistencia y nómina sin perder ningún registro almacenado.
-- **SC-008**: Un desarrollador puede producir el módulo adaptado usando solo el archivo de configuración, con cero modificaciones en archivos fuente centrales.
+- **SC-001**: Los usuarios pueden crear una nueva entidad y verla en la lista en menos de 2 minutos.
+- **SC-002**: Los usuarios pueden encontrar una entidad existente mediante la búsqueda en menos de 10 segundos tras introducir un término relevante.
+- **SC-003**: Al menos el 90% de los usuarios de prueba pueden completar tareas de crear, editar, eliminar y buscar sin ayuda.
+- **SC-004**: El sistema sigue siendo utilizable para un conjunto de datos de al menos 500 registros de entidad sin pérdida de funcionalidad central.
+- **SC-005**: Un usuario puede alcanzar las pantallas de gestión y búsqueda desde el panel o la barra lateral en menos de 10 segundos en el primer uso.
+- **SC-006**: Toda la funcionalidad existente de gestión de entidades y documentos sigue operativa tras el rediseño del marco ERP y el panel (sin regresiones).
+- **SC-007**: Los usuarios pueden navegar entre las pantallas de panel, gestión y búsqueda sin perder ninguna entidad ni documento almacenado.
+- **SC-008**: Un desarrollador puede producir un módulo adaptado usando solo el archivo de configuración, con cero modificaciones en archivos fuente centrales.
 - **SC-009**: Cada pantalla presenta el mismo marco con marca, y los usuarios pueden identificar en qué módulo están de un vistazo.
-- **SC-010**: Las estadísticas y los KPIs del panel siempre coinciden con el número de colaboradores, solicitudes, asistencias y liquidaciones almacenados.
-- **SC-011**: Una jefatura puede revisar y resolver una solicitud de vacaciones o permiso en menos de 2 minutos.
-- **SC-012**: Un administrador puede generar un contrato con los datos del colaborador precargados en menos de 3 minutos y sin reingresar información manualmente.
-- **SC-013**: Un encargado de nómina puede calcular y revisar la liquidación de un colaborador en menos de 3 minutos, con el desglose de conceptos visible.
-- **SC-014**: El 100% de los `payslips` cumple `net_pay = gross_pay - deducciones` y `gross_pay` coincide con la suma de los `payslip_lines` de tipo `earning`.
-- **SC-015**: El 100% de los intentos de acceso no autorizado se bloquea, muestra un mensaje claro y no expone datos sensibles.
-- **SC-016**: El 100% de las aprobaciones de permisos, cambios de `payslips`, cierres de `payroll_runs` y cambios de rol queda registrado en la auditoría.
-- **SC-017**: El sistema detecta el 100% de los registros duplicados de `attendance_records`, contratos superpuestos, `payslips` duplicados y conflictos de dotación mínima antes de guardar o cerrar.
-- **SC-018**: Ningún empleado puede ver liquidaciones, datos bancarios o registros de otro colaborador.
+- **SC-010**: Las estadísticas de registros mostradas en el panel siempre coinciden con el número de entidades y documentos almacenados.
 
 ## Suposiciones
 
-- El módulo gestiona los datos de una única organización, con compatibilidad multiempresa mediante `company_id`.
-- El ERP completo contiene otros módulos; esta especificación cubre únicamente las 14 tablas HR/Payroll y las tablas compartidas necesarias para la integración.
-- El módulo se apoya en el módulo base de ERP para identidad, marcas de tiempo, integridad referencial y eliminación lógica o en cascada según corresponda.
-- Las 14 tablas del módulo HR/Payroll y sus relaciones son las definidas en `erp_data_model.md`; `data-model.md` es la vista de negocio en español. El MVP se implementa sobre el frontend con datos simulados en JSON y `localStorage`.
-- `ModuleConfig` mapea Entidad → `employees` y Documento → `employee_contracts`, y declara los campos personalizados RUT, teléfono, dirección, datos bancarios y reglas de validación.
-- Existen cuatro roles: Administrador de RRHH, Encargado de Nómina, Jefatura o Supervisor y Empleado, cada uno con permisos y alcance de datos diferenciados.
-- La jefatura solo puede operar sobre sus subordinados directos, identificados mediante `employees.manager_id`.
-- `erp_data_model.md` no modela usuarios, roles ni permisos; el RBAC de US9 se implementa en la capa de aplicación.
-- El salario base y los datos bancarios son confidenciales; la jefatura no tiene visibilidad del salario y el empleado solo ve sus propios registros.
-- El saldo de vacaciones es un valor derivado de la asignación anual y de las `leave_requests` aprobadas; no requiere una tabla adicional en el ERP.
-- La dotación mínima se configura por `departments.department_id` y se evalúa al aprobar permisos que afecten la cobertura.
-- La liquidación es una simulación funcional del módulo, no un motor legal de impuestos, finiquitos o cotizaciones.
-- Los documentos legales se almacenan como metadatos vinculados a `employees` o `employee_contracts`, reutilizando el patrón Documento del ERP base.
-- Las notificaciones se muestran dentro de la aplicación y no requieren integración con correo electrónico externo.
-- La versión inicial prioriza el panel, las fichas y contratos, la liquidación, los permisos y la seguridad; la interfaz de beneficios y evaluaciones de desempeño queda para una iteración posterior.
-- Los datos se persisten en el almacenamiento local del navegador y no se ven afectados por la navegación entre pantallas.
-- Solo se muestra una pantalla a la vez y la navegación ocurre dentro de la aplicación.
-- El contenido introducido por los usuarios debe sanitizarse antes de renderizarse para prevenir ataques de inyección de scripts (XSS).
-
-## Trazabilidad de Historias de Usuario
-
-- **US1-US3**: se conservan de `spec.md` como historias genéricas base del ERP.
-- **US4-US6**: provienen de la especificación del grupo (el anterior `spec02.md`) y cubren autoservicio, altas y contratos, y permisos.
-- **US7-US8**: extensiones del dominio alineadas a las tablas `attendance_records` y `payroll_runs` de `erp_data_model.md`.
-- **US9**: control de acceso basado en roles, alineado con la tabla RBAC de `plan.md`; no tiene tabla en `erp_data_model.md`.
-
-## Trazabilidad con los Documentos del Proyecto
-
-- `README.md`: define el problema de negocio y las entidades de personal, contratos, permisos, asistencia, beneficios, evaluaciones y nómina.
-- `plan.md`: define los roles RBAC, el alcance del MVP, los KPIs del panel y las reglas de privacidad y sesgo.
-- `erp_data_model.md`: fuente de verdad del modelo relacional oficial; define las 14 tablas HR/Payroll, sus columnas, claves primarias y claves foráneas.
-- `data-model.md`: vista de negocio en español de las 14 tablas HR/Payroll, con nombres de entidades y atributos orientados al dominio.
-- `spec.md`: aporta la estructura obligatoria de la especificación, las tres historias base y los patrones de configuración, navegación, validación y búsqueda del ERP base.
-
-
-
+- El módulo base gestiona datos para un único espacio de trabajo en lugar de una base de datos multiinquilino compartida.
+- La adaptación a un módulo específico se realiza mediante un archivo de configuración del módulo en lugar de editando archivos fuente centrales.
+- Cada entidad incluye información básica suficiente para identificación y seguimiento; los módulos personalizados aportan los campos específicos del dominio.
+- La versión inicial se centra en la gestión central de datos maestros y documentos en lugar de capacidades ERP avanzadas como flujos de aprobación, períodos de contabilización o informes.
+- La búsqueda se realiza sobre los registros de entidad almacenados.
+- La pantalla de gestión consolida los formularios de añadir/editar entidad y añadir/editar documento en una sola pantalla de gestión.
+- La navegación entre áreas ocurre mediante una barra lateral persistente; la pantalla de gestión aloja ambos paneles de gestión y no muestra la lista de entidades.
+- El logotipo se genera como un monograma SVG en línea derivado del nombre del módulo; no se requieren recursos de imagen externos.
+- Se puede configurar un color de acento opcional para la marca; el resto de la paleta base permanece fija.
+- Solo se muestra una pantalla a la vez; no hay diseño lado a lado del contenido de gestión y búsqueda.
+- La navegación entre pantallas se maneja dentro de la aplicación (p. ej., cambio de vistas), y el botón atrás del navegador debe comportarse de forma predecible.
+- Los datos siguen persistiéndose en el localStorage del navegador y no se ven afectados por la navegación entre pantallas.
+- La pantalla de búsqueda se centra en encontrar y ver entidades; la edición permanece en la pantalla de gestión.
+- El contenido del usuario introducido por el usuario (nombres, descripciones, notas de documentos) DEBE sanitizarse antes de renderizarse en el DOM para prevenir ataques de inyección de scripts (XSS). El módulo base DEBE escapar HTML y atributos de eventos al mostrar datos de localStorage.
