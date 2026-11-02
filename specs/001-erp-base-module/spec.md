@@ -13,32 +13,30 @@ El objetivo del MVP es centralizar las fichas laborales, formalizar contratos, g
 
 ## Escenarios de Usuario y Pruebas *(obligatorio)*
 
-### Historia de Usuario 1 - Crear y organizar entidades (Prioridad: P1)
-Como usuario de negocio, quiero crear entradas de entidad con detalles claros para poder construir y mantener los datos maestros del módulo.
+### Historia de Usuario 1 - Gestión de Departamentos de la Empresa (Prioridad: P1)
+Como administrador de RRHH, quiero crear, editar y organizar los departamentos de la empresa, para estructurar correctamente la organización y asociar al personal.
 
-**Por qué esta prioridad**: Este es el valor central del producto porque, sin crear entidades, el resto de la experiencia no puede aportar valor.
+**Por qué esta prioridad**: La estructura departamental es el cimiento organizativo; sin departamentos creados, no es posible asignar a los empleados ni estructurar la jerarquía de la compañía.
+**Prueba Independiente**: Un administrador puede añadir un nuevo departamento con sus datos básicos, verificar que aparece en la lista, editar su nombre o jefe asignado, y ver los cambios reflejados de inmediato.
+**Escenarios de Aceptación**: 
 
-**Prueba Independiente**: Un usuario puede abrir el módulo, añadir una nueva entidad y verla aparecer en la lista.
-
-**Escenarios de Aceptación**:
-
-1. **Dado** que un usuario está viendo la lista de entidades, **cuando** crea una nueva entidad con un nombre y un código, **entonces** la nueva entidad se guarda y aparece en la lista.
-2. **Dado** que un usuario está creando una entidad, **cuando** deja la información obligatoria en blanco, **entonces** el sistema impide guardar y explica qué se necesita.
+1. Dado que el administrador está en la sección de estructura organizacional, cuando crea un nuevo departamento indicando un nombre y código válido, entonces el sistema guarda el registro y aparece en la lista de departamentos.
+2. Dado que un departamento ya existe, cuando el administrador edita el nombre o cambia el jefe de departamento asociado, entonces la información se actualiza correctamente.
+3. Dado que se está creando un departamento, cuando se deja el nombre obligatorio en blanco, entonces el sistema impide guardar y explica qué información falta.
 
 ---
 
-### Historia de Usuario 2 - Editar y eliminar entidades (Prioridad: P1)
-Como usuario de negocio, quiero actualizar o eliminar entidades cuando cambien los datos maestros para que los registros se mantengan precisos.
+### Historia de Usuario 2 - Gestión del Catálogo de Cargos y Niveles (Prioridad: P1)
+Como administrador de RRHH, quiero definir y actualizar los cargos de la empresa especificando su nombre y nivel de grado, para estandarizar los puestos de trabajo y asignarlos correctamente en los contratos del personal.
 
-**Por qué esta prioridad**: Mantener los registros actualizados es esencial para la confianza en la herramienta y para soportar las operaciones comerciales diarias.
-
-**Prueba Independiente**: Un usuario puede seleccionar una entidad existente, cambiar su información o eliminarla, y la lista refleja el cambio.
+**Por qué esta prioridad**: Mantener un catálogo de cargos estructurado es indispensable para la formalización contractual, la equidad salarial y la correcta definición de funciones dentro de la organización.
+**Prueba Independiente**: Un administrador puede registrar un nuevo cargo con su nivel de grado, verificar que aparece en el catálogo, modificar sus detalles o eliminarlo si no está en uso.
 
 **Escenarios de Aceptación**:
 
-1. **Dada** una entidad que ya existe en la lista, **cuando** el usuario edita sus detalles, **entonces** la información actualizada se guarda y se muestra en la lista.
-2. **Dada** una entidad que ya no es relevante, **cuando** el usuario la elimina, **entonces** desaparece de la lista y deja de aparecer en los resultados de búsqueda.
-3. **Dadas** cientos de entidades almacenadas, **cuando** el usuario edita o elimina una, **entonces** la lista se actualiza correctamente y sigue siendo ágil.
+1. Dado que el administrador visualiza el catálogo de cargos, cuando añade un nuevo cargo indicando nombre y nivel de grado, entonces el registro queda guardado y disponible para asignación.
+2. Dado un cargo existente que ha cambiado de categoría, cuando el administrador edita su nivel de grado, entonces la actualización se refleja correctamente en el sistema.
+3. Dado un cargo que se encuentra vinculado activamente a contratos de empleados, cuando se intenta eliminar, entonces el sistema bloquea la acción para proteger la integridad de los datos laborales.
 
 ---
 
