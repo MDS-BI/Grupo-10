@@ -155,6 +155,22 @@ Como administrador de RRHH, quiero asignar roles y limitar las acciones y los da
 
 ---
 
+**Historia de Usuario 10 \- Validación de Asistencia y Aprobación de Horas Extras (Prioridad: P2)** 
+
+Como Jefatura Directa, **quiero** visualizar y aprobar los registros de asistencia ya finalizados de mi equipo, **para** autorizar las horas extras y asegurar que el cálculo sea exacto antes del proceso de nómina.
+
+**Por qué esta prioridad:** Actúa como un paso de control de calidad sobre la asistencia registrada (HU 7), garantizando que las horas extras estén validadas por una jefatura sin exponer datos salariales confidenciales entre pares.
+
+**Prueba Independiente:** La jefatura revisa los registros diarios de su equipo, los aprueba y el sistema consolida el concepto de horas extras ocultando información confidencial como el RUT o sueldo base.
+
+**Escenarios de Aceptación:**
+
+1. **Dado** un conjunto de registros de asistencia completados por los empleados, **cuando** la jefatura ingresa al panel de validación, **entonces** el sistema filtra y muestra exclusivamente los registros de su personal a cargo.  
+2. **Dado** un registro pendiente de revisión, **cuando** la jefatura lo aprueba, **entonces** el sistema marca las horas extras como autorizadas y consolidadas para alimentar las líneas de liquidación del mes.  
+3. **Dada** la interacción de la jefatura con el panel de validación, **cuando** revisa los perfiles, **entonces** la interfaz restringe visualmente el acceso a atributos sensibles del trabajador (como el sueldo base o datos bancarios).
+
+---
+
 ### Casos Límite
 
 - ¿Qué ocurre cuando un usuario intenta guardar una entidad sin nombre o código obligatorio?
