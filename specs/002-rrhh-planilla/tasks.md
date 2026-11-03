@@ -121,13 +121,13 @@
 
 **Prueba Independiente**: Un empleado envía una solicitud y su jefatura la aprueba o rechaza; el saldo y el calendario se actualizan.
 
-- [ ] T036 [P] [HU5] Añadir pruebas unitarias de validación de permisos en `tests/unit/hr-storage.test.js` — Responsable: Juan Caros
-- [ ] T037 [P] [HU5] Añadir pruebas de integración de solicitud y aprobación en `tests/integration/permissions.test.js` — Responsable: Juan Caros
-- [ ] T038 [HU5] Implementar el catálogo de tipos de permiso con marca de remuneración — Responsable: Juan Caros
-- [ ] T039 [HU5] Implementar el formulario de solicitud de permiso del empleado — Responsable: Juan Caros
-- [ ] T040 [HU5] Implementar la bandeja de aprobación de la jefatura con comentario — Responsable: Juan Caros
-- [ ] T041 [HU5] Validar fechas, superposición, saldo disponible y dotación mínima — Responsable: Juan Caros
-- [ ] T042 [HU5] Actualizar saldo y calendario al aprobar, y notificar al empleado — Responsable: Juan Caros
+- [ ] T036 [P] [HU5] Añadir pruebas unitarias de validación de permisos en `tests/unit/hr-storage.test.js` — Responsable: Ricardo Cuevas
+- [ ] T037 [P] [HU5] Añadir pruebas de integración de solicitud y aprobación en `tests/integration/permissions.test.js` — Responsable: Ricardo Cuevas
+- [ ] T038 [HU5] Implementar el catálogo de tipos de permiso con marca de remuneración — Responsable: Ricardo Cuevas
+- [ ] T039 [HU5] Implementar el formulario de solicitud de permiso del empleado — Responsable: Ricardo Cuevas
+- [ ] T040 [HU5] Implementar la bandeja de aprobación de la jefatura con comentario — Responsable: Ricardo Cuevas
+- [ ] T041 [HU5] Validar fechas, superposición, saldo disponible y dotación mínima — Responsable: Ricardo Cuevas
+- [ ] T042 [HU5] Actualizar saldo y calendario al aprobar, y notificar al empleado — Responsable: Ricardo Cuevas
 
 **Punto de control**: HU5 funcional y trazable.
 
@@ -193,11 +193,11 @@
 
 **Prueba Independiente**: La jefatura aprueba horas extras y el concepto queda consolidado para la nómina sin duplicarse.
 
-- [ ] T064 [P] [HU9] Añadir pruebas unitarias de cálculo y aprobación de horas extras en `tests/unit/hr-payroll.test.js` — Responsable: Juan Caros
-- [ ] T065 [P] [HU9] Añadir pruebas de integración de aprobación de horas extras en `tests/integration/overtime.test.js` — Responsable: Juan Caros
-- [ ] T066 [HU9] Implementar el panel de validación de asistencia del equipo directo — Responsable: Juan Caros
-- [ ] T067 [HU9] Aprobar horas extras y consolidarlas como concepto de nómina — Responsable: Juan Caros
-- [ ] T068 [HU9] Impedir la doble aprobación y ocultar datos salariales en el panel — Responsable: Juan Caros
+- [ ] T064 [P] [HU9] Añadir pruebas unitarias de cálculo y aprobación de horas extras en `tests/unit/hr-payroll.test.js` — Responsable: Vicente Morales
+- [ ] T065 [P] [HU9] Añadir pruebas de integración de aprobación de horas extras en `tests/integration/overtime.test.js` — Responsable: Vicente Morales
+- [ ] T066 [HU9] Implementar el panel de validación de asistencia del equipo directo — Responsable: Vicente Morales
+- [ ] T067 [HU9] Aprobar horas extras y consolidarlas como concepto de nómina — Responsable: Vicente Morales
+- [ ] T068 [HU9] Impedir la doble aprobación y ocultar datos salariales en el panel — Responsable: Vicente Morales
 
 **Punto de control**: HU9 funcional; la nómina solo consume horas extras aprobadas.
 
@@ -209,11 +209,11 @@
 
 **Prueba Independiente**: Un administrador crea un beneficio, inscribe a un colaborador y una inscripción duplicada se rechaza.
 
-- [ ] T069 [P] [HU10] Añadir pruebas unitarias de beneficios e inscripciones en `tests/unit/hr-storage.test.js` — Responsable: Benjamín (valdechito)
-- [ ] T070 [P] [HU10] Añadir pruebas de integración de inscripción en `tests/integration/benefits.test.js` — Responsable: Benjamín (valdechito)
-- [ ] T071 [HU10] Implementar el catálogo de beneficios con nombre, proveedor y costo — Responsable: Benjamín (valdechito)
-- [ ] T072 [HU10] Implementar la inscripción y el historial de beneficios por empleado — Responsable: Benjamín (valdechito)
-- [ ] T073 [HU10] Impedir inscripciones duplicadas y bloquear la eliminación de beneficios con inscripciones activas — Responsable: Benjamín (valdechito)
+- [ ] T069 [P] [HU10] Añadir pruebas unitarias de beneficios e inscripciones en `tests/unit/hr-storage.test.js` — Responsable: Ricardo Cuevas
+- [ ] T070 [P] [HU10] Añadir pruebas de integración de inscripción en `tests/integration/benefits.test.js` — Responsable: Ricardo Cuevas
+- [ ] T071 [HU10] Implementar el catálogo de beneficios con nombre, proveedor y costo — Responsable: Ricardo Cuevas
+- [ ] T072 [HU10] Implementar la inscripción y el historial de beneficios por empleado — Responsable: Ricardo Cuevas
+- [ ] T073 [HU10] Impedir inscripciones duplicadas y bloquear la eliminación de beneficios con inscripciones activas — Responsable: Ricardo Cuevas
 
 **Punto de control**: HU10 funcional y con costo consolidado.
 
@@ -225,11 +225,11 @@
 
 **Prueba Independiente**: Una jefatura evalúa a un subordinado con nota válida; una nota fuera de rango o un colaborador ajeno se rechazan.
 
-- [ ] T074 [P] [HU11] Añadir pruebas unitarias de validación de evaluaciones en `tests/unit/hr-storage.test.js` — Responsable: Ángel Gidi
-- [ ] T075 [P] [HU11] Añadir pruebas de integración de evaluaciones en `tests/integration/evaluations.test.js` — Responsable: Ángel Gidi
-- [ ] T076 [HU11] Implementar el formulario de evaluación con fecha, calificación y comentarios — Responsable: Ángel Gidi
-- [ ] T077 [HU11] Validar rango 1.00–5.00 y que el evaluado sea subordinado directo — Responsable: Ángel Gidi
-- [ ] T078 [HU11] Mostrar al colaborador solo sus evaluaciones y a RRHH el agregado — Responsable: Ángel Gidi
+- [ ] T074 [P] [HU11] Añadir pruebas unitarias de validación de evaluaciones en `tests/unit/hr-storage.test.js` — Responsable: Vicente Morales
+- [ ] T075 [P] [HU11] Añadir pruebas de integración de evaluaciones en `tests/integration/evaluations.test.js` — Responsable: Vicente Morales
+- [ ] T076 [HU11] Implementar el formulario de evaluación con fecha, calificación y comentarios — Responsable: Vicente Morales
+- [ ] T077 [HU11] Validar rango 1.00–5.00 y que el evaluado sea subordinado directo — Responsable: Vicente Morales
+- [ ] T078 [HU11] Mostrar al colaborador solo sus evaluaciones y a RRHH el agregado — Responsable: Vicente Morales
 
 **Punto de control**: HU11 funcional; el colaborador solo ve sus propios datos.
 
@@ -287,8 +287,9 @@
 
 | Integrante | Historias | Tareas principales |
 |---|---|---|
-| **Ángel Gidi** | HU1, HU2, HU11 | T001, T003, T010, T015–T023, T074–T078, T081, T087 |
+| **Ángel Gidi** | HU1, HU2 | T001, T003, T010, T015–T023, T081, T087 |
 | **José Sellán** | HU3, HU4 | T006, T007, T011, T024–T035, T084, T085 |
-| **Juan Caros** | HU5, HU9 | T036–T042, T064–T068 |
 | **Lucas Lemarie** | HU6, HU7 | T004, T014, T043–T057, T079, T080, T083 |
-| **Benjamín (valdechito)** | HU8, HU10 | T002, T005, T008, T009, T012, T013, T058–T063, T069–T073, T082, T086 |
+| **Benjamín (valdechito)** | HU8 | T002, T005, T008, T009, T012, T013, T058–T063, T082, T086 |
+| **Ricardo Cuevas** | HU5, HU10 | T036–T042, T069–T073 |
+| **Vicente Morales** | HU9, HU11 | T064–T068, T074–T078 |

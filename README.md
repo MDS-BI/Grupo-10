@@ -164,11 +164,12 @@ El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`
 
 | Integrante | Historias asignadas |
 |---|---|
-| Ángel Gidi | HU1, HU2, HU11 |
+| Ángel Gidi | HU1, HU2 |
 | José Sellán | HU3, HU4 |
-| Juan Caros | HU5, HU9 |
 | Lucas Lemarie | HU6, HU7 |
-| Benjamín (valdechito) | HU8, HU10 |
+| Benjamín (valdechito) | HU8 |
+| Ricardo Cuevas | HU5, HU10 |
+| Vicente Morales | HU9, HU11 |
 
 ## Cronograma
 
@@ -196,4 +197,4 @@ El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`
 
 ## Uso académico
 
-Proyecto desarrollado para el curso **Modelación de Sistemas 2026-2** de la Universidad de Concepción. Su alcance es académico y no representa un sistema de nómina listo para producción.
+Proyecto desarrollado para el curso **Modelación de Sistemas 2026-2** de la Universidad de Concepción, dictado por el profesor **Juan Caros**. Su alcance es académico y no representa un sistema de nómina listo para producción.

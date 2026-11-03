@@ -100,7 +100,7 @@ Como administrador de RRHH, quiero registrar un nuevo colaborador y generar su c
 
 ### Historia de Usuario 5 - Aprobación de solicitudes de vacaciones y permisos (Prioridad: P1)
 
-**Responsable**: Juan Caros
+**Responsable**: Ricardo Cuevas
 
 Como jefatura o supervisor, quiero revisar y aprobar o rechazar las solicitudes de vacaciones y permisos de mi equipo para asegurar la continuidad operacional del área.
 
@@ -183,7 +183,7 @@ Como administrador de RRHH, quiero asignar roles y limitar las acciones y los da
 
 ### Historia de Usuario 9 - Validación de Asistencia y Aprobación de Horas Extras (Prioridad: P2)
 
-**Responsable**: Juan Caros
+**Responsable**: Vicente Morales
 
 Como jefatura directa, quiero visualizar y aprobar los registros de asistencia ya finalizados de mi equipo, para autorizar las horas extras y asegurar que el cálculo sea exacto antes del proceso de nómina.
 
@@ -202,7 +202,7 @@ Como jefatura directa, quiero visualizar y aprobar los registros de asistencia y
 
 ### Historia de Usuario 10 - Inscripción y gestión de beneficios (Prioridad: P2)
 
-**Responsable**: Benjamín (valdechito)
+**Responsable**: Ricardo Cuevas
 
 Como administrador de RRHH, quiero administrar el catálogo de beneficios e inscribir a los colaboradores para que accedan a los planes ofrecidos por la empresa y su costo quede reflejado en la gestión de personal.
 
@@ -221,7 +221,7 @@ Como administrador de RRHH, quiero administrar el catálogo de beneficios e insc
 
 ### Historia de Usuario 11 - Registro de evaluaciones de desempeño (Prioridad: P2)
 
-**Responsable**: Ángel Gidi
+**Responsable**: Vicente Morales
 
 Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis colaboradores directos para dejar evidencia objetiva de su rendimiento y acordar mejoras.
 
