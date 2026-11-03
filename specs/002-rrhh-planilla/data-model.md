@@ -9,7 +9,7 @@
 
 ## 1. Diagrama Entidad-Relación (Mermaid ERD)
 
-Este código reproduce **exactamente** el diagrama oficial: mismas 14 entidades, mismos nombres de atributos y mismas relaciones.
+Este código reproduce el diagrama oficial con las mismas 14 entidades, nombres de atributos y relaciones, y añade un conjunto mínimo de campos marcados con `†` para soportar las reglas de saldo de permisos y vigencia de beneficios (HU5 y HU10). Las 14 entidades se mantienen.
 
 > **Para regenerar la imagen:** pega este bloque en [mermaid.live](https://mermaid.live) y descarga en PNG/SVG.
 
@@ -38,6 +38,7 @@ erDiagram
         int empresa_id FK
         varchar nombre_departamento
         int jefe_departamento_id FK "nullable circular"
+        int dotacion_minima "default 1 †"
     }
 
     CARGOS {
@@ -73,6 +74,7 @@ erDiagram
         varchar nombre_beneficio
         varchar proveedor
         decimal costo
+        varchar estado "activo o inactivo †"
     }
 
     BENEFICIOS_EMPLEADO {
@@ -80,6 +82,8 @@ erDiagram
         int empleado_id FK
         int beneficio_id FK
         date fecha_inscripcion
+        varchar estado "activo o finalizado †"
+        date fecha_fin "nullable †"
     }
 
     REGISTROS_ASISTENCIA {
@@ -95,6 +99,7 @@ erDiagram
         int tipo_permiso_id PK
         varchar nombre_tipo_permiso
         boolean es_remunerado
+        int dias_anuales "nullable †"
     }
 
     SOLICITUDES_PERMISO {
@@ -104,7 +109,11 @@ erDiagram
         int aprobado_por FK
         date fecha_inicio
         date fecha_fin
+        int dias_solicitados "†"
         varchar estado
+        text comentario "nullable †"
+        date fecha_solicitud "†"
+        date fecha_resolucion "nullable †"
     }
 
     PERIODOS_NOMINA {
@@ -157,6 +166,7 @@ erDiagram
 | | | `empresa_id` (int, FK) | Empresa propietaria → `companies.company_id`. |
 | | | `nombre_departamento` (varchar) | Nombre del área (Ventas, Producción, TI…). |
 | | | `jefe_departamento_id` (int, FK, nullable) | Empleado que lidera el área → `EMPLEADOS.empleado_id` (referencia circular). |
+| | | `dotacion_minima` (int, default 1) † | Personal mínimo que debe quedar cubierto al aprobar ausencias. |
 | 2 | **CARGOS** | `cargo_id` (int, PK) | Identificador del puesto. |
 | | | `nombre_cargo` (varchar) | Denominación del cargo. |
 | | | `nivel_grado` (varchar) | Banda jerárquica/salarial (Junior, Senior, Jefatura). |
@@ -178,10 +188,13 @@ erDiagram
 | | | `nombre_beneficio` (varchar) | Seguro complementario, bono colación, etc. |
 | | | `proveedor` (varchar) | Entidad externa que lo presta. |
 | | | `costo` (decimal) | Costo mensual del beneficio. |
+| | | `estado` (varchar) † | `activo` o `inactivo`; un beneficio inactivo no admite inscripciones. |
 | 6 | **BENEFICIOS_EMPLEADO** | `beneficio_empleado_id` (int, PK) | Identificador de la inscripción. |
 | | | `empleado_id` (int, FK) | Empleado suscrito. |
 | | | `beneficio_id` (int, FK) | Beneficio asignado. |
 | | | `fecha_inscripcion` (date) | Inicio de la afiliación. |
+| | | `estado` (varchar) † | `activo` o `finalizado`. |
+| | | `fecha_fin` (date, nullable) † | Fecha de término de la inscripción finalizada. |
 | 7 | **REGISTROS_ASISTENCIA** | `asistencia_id` (int, PK) | Identificador de la marcación. |
 | | | `empleado_id` (int, FK) | Trabajador que marcó. |
 | | | `fecha_laboral` (date) | Día de la jornada. |
@@ -190,12 +203,17 @@ erDiagram
 | 8 | **TIPOS_PERMISO** | `tipo_permiso_id` (int, PK) | Identificador del tipo de ausencia. |
 | | | `nombre_tipo_permiso` (varchar) | Vacaciones, licencia médica, permiso administrativo. |
 | | | `es_remunerado` (boolean) | Si el día se paga o se descuenta. |
+| | | `dias_anuales` (int, nullable) † | Derecho anual de días; si es nulo, el tipo no consume saldo (p. ej. licencia médica). |
 | 9 | **SOLICITUDES_PERMISO** | `solicitud_permiso_id` (int, PK) | Identificador de la solicitud. |
 | | | `empleado_id` (int, FK) | Solicitante. |
 | | | `tipo_permiso_id` (int, FK) | Motivo tipificado. |
 | | | `aprobado_por` (int, FK) | Jefatura que visó. |
 | | | `fecha_inicio` / `fecha_fin` (date) | Período solicitado. |
+| | | `dias_solicitados` (int) † | Días hábiles solicitados; base del descuento de saldo. |
 | | | `estado` (varchar) | Pendiente / aprobada / rechazada. |
+| | | `comentario` (text, nullable) † | Motivo de aprobación o rechazo visible para el empleado. |
+| | | `fecha_solicitud` (date) † | Fecha de envío de la solicitud. |
+| | | `fecha_resolucion` (date, nullable) † | Fecha de aprobación o rechazo. |
 | 10 | **PERIODOS_NOMINA** | `periodo_nomina_id` (int, PK) | Identificador de la corrida mensual. |
 | | | `empresa_id` (int, FK) → `companies` | Empresa que paga. |
 | | | `inicio_periodo` / `fin_periodo` (date) | Mes computado. |
@@ -264,9 +282,15 @@ Las 14 entidades se integran con el resto del ERP mediante 3 familias de enlaces
 - Un empleado no puede tener dos contratos vigentes superpuestos.
 - `REGISTROS_ASISTENCIA` es único por (`empleado_id`, `fecha_laboral`) y `hora_salida` debe ser posterior a `hora_entrada`.
 - `SOLICITUDES_PERMISO.fecha_fin` debe ser igual o posterior a `fecha_inicio`; no se permiten solicitudes superpuestas para el mismo empleado.
+- `SOLICITUDES_PERMISO.dias_solicitados` no puede superar el saldo derivado de `TIPOS_PERMISO.dias_anuales` menos los días ya aprobados en el año. Si `dias_anuales` es nulo, la solicitud no consume saldo.
+- `DEPARTAMENTOS.dotacion_minima` es configurable (por defecto 1) y no puede ser superada por ausencias aprobadas simultáneas del área.
+- Una jefatura no puede aprobar (`aprobado_por`) su propia solicitud; debe resolverla su jefatura o RRHH.
+- Todo rechazo debe registrar `comentario` y `fecha_resolucion`; solo las solicitudes aprobadas descuentan saldo.
 - `LIQUIDACIONES` es única por (`periodo_nomina_id`, `empleado_id`) y requiere un contrato vigente en el período.
 - `DETALLES_LIQUIDACION.monto` se clasifica como haber o deducción según `CONCEPTOS_NOMINA.tipo_concepto`.
-- `BENEFICIOS_EMPLEADO` no permite dos inscripciones activas del mismo empleado en el mismo beneficio.
+- `BENEFICIOS_EMPLEADO` está activa cuando `estado = 'activo'` y `fecha_fin` es nula; no se permiten dos inscripciones activas del mismo empleado en el mismo beneficio ni inscripciones en un beneficio con `estado = 'inactivo'`.
+- Un `BENEFICIOS` con inscripciones activas no puede eliminarse ni desactivarse; una vez finalizadas, se desactiva para conservar el historial y no se elimina si tiene inscripciones históricas.
+- El costo consolidado de beneficios por colaborador y período usa `BENEFICIOS.costo` vigente.
 - `EVALUACIONES_DESEMPENO.calificacion` debe estar entre 1.00 y 5.00; el evaluador debe ser jefe directo del evaluado.
 - Los registros históricos de nómina, contratos y evaluaciones no se eliminan; se conservan para auditoría.
 - Los cambios de salario, datos bancarios, roles y reapertura de períodos generan un registro de auditoría.

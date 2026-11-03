@@ -91,18 +91,22 @@ Como administrador de RRHH, quiero registrar un nuevo colaborador y generar su c
 
 ### Historia de Usuario 5 - Aprobación de solicitudes de vacaciones y permisos (Prioridad: P1)
 
-Como jefatura o supervisor, quiero revisar y aprobar o rechazar las solicitudes de vacaciones y permisos de mi equipo para asegurar la continuidad operacional del área.
+Como jefatura o supervisor, quiero revisar y aprobar o rechazar las solicitudes de vacaciones y permisos de mi equipo, con control de saldo de días y dotación mínima, para asegurar la continuidad operacional del área.
 
-**Por qué esta prioridad**: Gestionar las ausencias de manera oportuna evita cuellos de botella en la operación diaria y mantiene una planificación transparente y justa del personal a cargo.
+**Por qué esta prioridad**: Gestionar las ausencias de manera oportuna evita cuellos de botella en la operación diaria y mantiene una planificación transparente y justa del personal a cargo. El saldo de días y la dotación mínima son las reglas que evitan otorgar ausencias inexistentes o dejar al área sin personal suficiente.
 
-**Prueba Independiente**: Una jefatura puede visualizar las solicitudes pendientes de su equipo, verificar los días disponibles en el saldo y aprobarlas o rechazarlas con un comentario opcional.
+**Prueba Independiente**: Una jefatura puede visualizar las solicitudes pendientes de su equipo, verificar el saldo de días disponible y la dotación mínima del área, y aprobarlas o rechazarlas dejando un comentario; el sistema actualiza el estado de la solicitud, el saldo del empleado y el calendario de ausencias del área.
 
 **Escenarios de Aceptación**:
 
-1. **Dada** una solicitud de vacaciones enviada por un miembro del equipo, **cuando** el supervisor revisa las fechas y el saldo de días disponibles, **entonces** puede hacer clic en "Aprobar" y el sistema actualiza el calendario y el saldo del empleado.
-2. **Dada** una solicitud que genera un conflicto de dotación mínima en el área, **cuando** el supervisor la rechaza indicando un motivo, **entonces** la solicitud cambia de estado y se notifica al empleado con el comentario ingresado.
+1. **Dada** una solicitud de vacaciones enviada por un miembro del equipo, **cuando** el supervisor revisa las fechas y el saldo de días disponibles, **entonces** puede hacer clic en "Aprobar" y el sistema actualiza el estado de la solicitud, descuenta los días del saldo del empleado y refleja la ausencia en el calendario del área.
+2. **Dada** una solicitud que genera un conflicto de dotación mínima en el área, **cuando** el supervisor la rechaza indicando un motivo, **entonces** la solicitud cambia a estado rechazado, el comentario del aprobador queda registrado y visible para el empleado, y el saldo no se descuenta.
 3. **Dada** una solicitud con fecha de término anterior a la fecha de inicio, **cuando** se intenta enviar, **entonces** el sistema la rechaza antes de llegar a la bandeja de aprobación.
 4. **Dadas** dos solicitudes del mismo empleado con fechas superpuestas, **cuando** se intenta crear la segunda, **entonces** el sistema la bloquea y muestra el conflicto.
+5. **Dado** un administrador de RRHH que configura el derecho anual de días de un tipo de permiso y la dotación mínima de un departamento, **cuando** guarda los valores, **entonces** el sistema usa esos valores en las validaciones de saldo y dotación de ese tipo y esa área.
+6. **Dada** una solicitud cuyos días solicitados superan el saldo disponible del empleado para el tipo de permiso, **cuando** el empleado intenta enviarla, **entonces** el sistema la rechaza antes de llegar a la bandeja de aprobación e indica el saldo restante.
+7. **Dada** una solicitud enviada por la propia jefatura, **cuando** intenta aprobarla, **entonces** el sistema bloquea la autoaprobación y exige que la resuelva su propia jefatura o un administrador de RRHH.
+8. **Dado** un empleado cuyo tipo de permiso no tiene derecho anual configurado, **cuando** registra la solicitud, **entonces** el sistema la acepta para revisión sin consumir saldo y lo indica en la bandeja de la jefatura.
 
 ---
 
@@ -181,20 +185,24 @@ Como jefatura directa, quiero visualizar y aprobar los registros de asistencia y
 
 ---
 
-### Historia de Usuario 10 - Inscripción y gestión de beneficios (Prioridad: P2)
+### Historia de Usuario 10 - Inscripción, vigencia y baja de beneficios (Prioridad: P2)
 
-Como administrador de RRHH, quiero administrar el catálogo de beneficios e inscribir a los colaboradores para que accedan a los planes ofrecidos por la empresa y su costo quede reflejado en la gestión de personal.
+Como administrador de RRHH, quiero administrar el catálogo de beneficios, inscribir, actualizar y dar de baja a los colaboradores, para que accedan a los planes vigentes de la empresa y su costo quede reflejado en la gestión de personal.
 
-**Por qué esta prioridad**: Los beneficios son parte de la propuesta laboral y del costo de personal; su registro permite auditar inscripciones y consolidar el gasto asociado.
+**Por qué esta prioridad**: Los beneficios son parte de la propuesta laboral y del costo de personal; su registro permite auditar inscripciones, controlar su vigencia y consolidar el gasto asociado sin dejar inscripciones activas indefinidas.
 
-**Prueba Independiente**: Un administrador crea un beneficio, inscribe a un colaborador y verifica que la inscripción aparece en su ficha; un intento de inscripción duplicada se rechaza.
+**Prueba Independiente**: Un administrador crea un beneficio, inscribe a un colaborador, verifica que la inscripción aparece como activa en su historial, finaliza la inscripción y comprueba que el beneficio puede retirarse del catálogo cuando ya no quedan inscripciones activas; una inscripción duplicada activa se rechaza.
 
 **Escenarios de Aceptación**:
 
-1. **Dado** el catálogo de beneficios, **cuando** el administrador crea un beneficio con nombre, proveedor y costo, **entonces** queda disponible para inscripción.
-2. **Dada** la ficha de un colaborador, **cuando** el administrador lo inscribe en un beneficio con fecha de inscripción, **entonces** la inscripción se guarda y se muestra en su historial.
-3. **Dado** un colaborador ya inscrito en un beneficio activo, **cuando** se intenta inscribirlo nuevamente, **entonces** el sistema lo impide y muestra la inscripción existente.
-4. **Dado** un beneficio con inscripciones activas, **cuando** el administrador intenta eliminarlo, **entonces** el sistema bloquea la acción y sugiere finalizar las inscripciones primero.
+1. **Dado** el catálogo de beneficios, **cuando** el administrador crea un beneficio con nombre, proveedor y costo, **entonces** queda disponible como activo para inscripción.
+2. **Dada** la ficha de un colaborador, **cuando** el administrador lo inscribe en un beneficio con fecha de inscripción, **entonces** la inscripción se guarda como activa y se muestra en su historial.
+3. **Dado** un colaborador ya inscrito con una inscripción activa en un beneficio, **cuando** se intenta inscribirlo nuevamente, **entonces** el sistema lo impide y muestra la inscripción existente.
+4. **Dada** una inscripción activa, **cuando** el administrador la finaliza indicando una fecha de término, **entonces** la inscripción pasa a estado finalizado, se conserva en el historial y deja de contar como activa.
+5. **Dado** un beneficio con inscripciones activas, **cuando** el administrador intenta eliminarlo o desactivarlo, **entonces** el sistema bloquea la acción y sugiere finalizar las inscripciones primero; con inscripciones históricas se permite desactivarlo, pero no eliminarlo, para conservar el historial.
+6. **Dado** un beneficio con costo registrado, **cuando** el administrador actualiza su costo, **entonces** el nuevo valor se usa en la consolidación de costo por colaborador y por período sin alterar las inscripciones existentes.
+7. **Dada** la ficha de un colaborador con beneficios, **cuando** se consulta su historial, **entonces** se muestran las inscripciones activas y finalizadas con sus fechas.
+8. **Dado** un beneficio inactivo, **cuando** se intenta inscribir a un colaborador, **entonces** el sistema lo impide porque el beneficio no está vigente.
 
 ---
 
@@ -224,6 +232,9 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 - ¿Qué ocurre cuando un contrato no tiene fecha de término y el tipo de contrato exige una?
 - ¿Qué ocurre cuando un empleado tiene dos contratos vigentes superpuestos?
 - ¿Qué ocurre cuando una solicitud de permiso supera el saldo disponible?
+- ¿Qué ocurre cuando el tipo de permiso no tiene derecho anual configurado?
+- ¿Qué ocurre cuando la jefatura intenta aprobar su propia solicitud?
+- ¿Qué ocurre cuando no se ha configurado la dotación mínima de un departamento?
 - ¿Qué ocurre cuando dos solicitudes de permiso del mismo empleado se superponen?
 - ¿Qué ocurre cuando se registra asistencia para un día futuro?
 - ¿Qué ocurre cuando la hora de salida es anterior a la hora de entrada?
@@ -233,6 +244,9 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 - ¿Qué ocurre cuando un supervisor intenta ver el sueldo base de un subordinado?
 - ¿Qué ocurre cuando se elimina un empleado con liquidaciones históricas?
 - ¿Qué ocurre cuando se intenta inscribir a un empleado en un beneficio ya activo?
+- ¿Qué ocurre cuando se intenta inscribir a un empleado en un beneficio inactivo?
+- ¿Qué ocurre cuando se finaliza una inscripción y luego se intenta eliminar el beneficio?
+- ¿Qué ocurre cuando se actualiza el costo de un beneficio con inscripciones activas?
 - ¿Qué ocurre cuando se evaluúa a un colaborador que no es subordinado directo?
 - ¿Qué ocurre cuando los datos de localStorage están corruptos o incompletos?
 
@@ -264,11 +278,11 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 
 #### Permisos y asistencia
 
-- **FR-017**: El sistema DEBE administrar los tipos de permiso con nombre y marca de si son remunerados.
-- **FR-018**: El sistema DEBE permitir registrar solicitudes de permiso con empleado, tipo, fechas, estado y aprobador.
-- **FR-019**: El sistema DEBE validar fechas, superposición de solicitudes, saldo disponible y dotación mínima del área.
-- **FR-020**: El sistema DEBE permitir a la jefatura aprobar o rechazar solicitudes con un comentario y notificar al empleado.
-- **FR-021**: El sistema DEBE actualizar el calendario y el saldo del empleado cuando una solicitud es aprobada.
+- **FR-017**: El sistema DEBE administrar los tipos de permiso con nombre, marca de si son remunerados y derecho anual de días (opcional para tipos sin saldo, como licencias médicas).
+- **FR-018**: El sistema DEBE permitir registrar solicitudes de permiso con empleado, tipo, fechas, días solicitados, estado, aprobador, comentario y fechas de solicitud y resolución.
+- **FR-019**: El sistema DEBE validar fechas, superposición de solicitudes, días solicitados contra el saldo derivado del derecho anual y la dotación mínima configurable del área.
+- **FR-020**: El sistema DEBE permitir a la jefatura aprobar o rechazar solicitudes registrando un comentario, notificar al empleado y bloquear la autoaprobación.
+- **FR-021**: El sistema DEBE actualizar el estado de la solicitud, el saldo del empleado (descontando solo las solicitudes aprobadas) y el calendario de ausencias derivado del área cuando una solicitud es aprobada.
 - **FR-022**: El sistema DEBE registrar la asistencia diaria con empleado, fecha laboral, hora de entrada, hora de salida y horas trabajadas calculadas.
 - **FR-023**: El sistema DEBE impedir más de un registro de asistencia por empleado y fecha.
 - **FR-024**: El sistema DEBE rechazar registros con hora de salida anterior o igual a la hora de entrada y registros de empleados desvinculados.
@@ -290,13 +304,13 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 
 #### Beneficios y desempeño
 
-- **FR-037**: El sistema DEBE administrar el catálogo de beneficios con nombre, proveedor y costo.
-- **FR-038**: El sistema DEBE permitir inscribir colaboradores en beneficios con fecha de inscripción y conservar el historial.
-- **FR-039**: El sistema DEBE impedir inscripciones duplicadas o activas simultáneas del mismo colaborador en el mismo beneficio.
-- **FR-040**: El sistema DEBE impedir eliminar un beneficio con inscripciones activas.
+- **FR-037**: El sistema DEBE administrar el catálogo de beneficios con nombre, proveedor, costo y estado (activo/inactivo), y permitir actualizar el costo.
+- **FR-038**: El sistema DEBE permitir inscribir colaboradores en beneficios con fecha de inscripción y estado, finalizar la inscripción con fecha de término y conservar el historial de inscripciones activas y finalizadas.
+- **FR-039**: El sistema DEBE impedir inscripciones duplicadas o activas simultáneas del mismo colaborador en el mismo beneficio y rechazar inscripciones en beneficios inactivos.
+- **FR-040**: El sistema DEBE impedir eliminar o desactivar un beneficio con inscripciones activas y conservar el historial de inscripciones finalizadas al desactivarlo.
 - **FR-041**: El sistema DEBE registrar evaluaciones de desempeño con colaborador, evaluador, fecha, calificación entre 1.00 y 5.00 y comentarios.
 - **FR-042**: El sistema DEBE permitir evaluar solo a subordinados directos y mostrar al colaborador solo sus propias evaluaciones.
-- **FR-043**: El sistema DEBE consolidar el costo de beneficios por colaborador y por período.
+- **FR-043**: El sistema DEBE consolidar el costo de beneficios por colaborador y por período usando el costo vigente de cada beneficio.
 
 #### Seguridad, datos y plataforma
 
@@ -316,15 +330,15 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 
 ### Entidades Clave *(incluir si la funcionalidad implica datos)*
 
-- **DEPARTAMENTOS**: área organizacional con nombre, empresa y jefe; agrupa empleados.
+- **DEPARTAMENTOS**: área organizacional con nombre, empresa, jefe y dotación mínima; agrupa empleados.
 - **CARGOS**: puesto de trabajo con nombre y nivel de grado; se asigna a empleados y contratos.
 - **EMPLEADOS**: ficha laboral con identificación, contacto, fecha de contratación, estado, departamento, cargo y supervisor.
 - **CONTRATOS_EMPLEADO**: vínculo contractual con tipo, vigencia, salario base y moneda.
-- **BENEFICIOS**: catálogo de beneficios con proveedor y costo.
-- **BENEFICIOS_EMPLEADO**: inscripción de un empleado en un beneficio, con fecha de inscripción.
+- **BENEFICIOS**: catálogo de beneficios con proveedor, costo y estado (activo/inactivo).
+- **BENEFICIOS_EMPLEADO**: inscripción de un empleado en un beneficio, con fecha de inscripción, estado y fecha de término.
 - **REGISTROS_ASISTENCIA**: marcación diaria con entrada, salida y horas trabajadas.
-- **TIPOS_PERMISO**: catálogo de ausencias con marca de remuneración.
-- **SOLICITUDES_PERMISO**: solicitud de ausencia con fechas, estado y aprobador.
+- **TIPOS_PERMISO**: catálogo de ausencias con marca de remuneración y derecho anual de días.
+- **SOLICITUDES_PERMISO**: solicitud de ausencia con fechas, días solicitados, estado, aprobador y comentario.
 - **PERIODOS_NOMINA**: período mensual de cálculo con fechas y estado.
 - **CONCEPTOS_NOMINA**: concepto de haber o deducción aplicable a una liquidación.
 - **LIQUIDACIONES**: resultado de nómina por empleado y período con total de haberes y sueldo líquido.

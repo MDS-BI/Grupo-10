@@ -116,17 +116,17 @@
 
 ## Fase 7: HU5 - Aprobación de permisos (Prioridad: P1)
 
-**Objetivo**: Gestionar solicitudes de ausencia con trazabilidad y validación de saldo y dotación.
+**Objetivo**: Gestionar solicitudes de ausencia con trazabilidad, saldo derivado del derecho anual, comentario de resolución, bloqueo de autoaprobación y dotación mínima configurable.
 
-**Prueba Independiente**: Un empleado envía una solicitud y su jefatura la aprueba o rechaza; el saldo y el calendario se actualizan.
+**Prueba Independiente**: Un empleado envía una solicitud y su jefatura la aprueba o rechaza con comentario; el saldo y el calendario se actualizan, y una solicitud que supera el saldo o la autoaprobación se bloquea.
 
-- [ ] T036 [P] [HU5] Añadir pruebas unitarias de validación de permisos en `tests/unit/hr-storage.test.js`
-- [ ] T037 [P] [HU5] Añadir pruebas de integración de solicitud y aprobación en `tests/integration/permissions.test.js`
-- [ ] T038 [HU5] Implementar el catálogo de tipos de permiso con marca de remuneración
-- [ ] T039 [HU5] Implementar el formulario de solicitud de permiso del empleado
-- [ ] T040 [HU5] Implementar la bandeja de aprobación de la jefatura con comentario
-- [ ] T041 [HU5] Validar fechas, superposición, saldo disponible y dotación mínima
-- [ ] T042 [HU5] Actualizar saldo y calendario al aprobar, y notificar al empleado
+- [ ] T036 [P] [HU5] Añadir pruebas unitarias de validación de permisos (fechas, superposición, saldo derivado, autoaprobación) en `tests/unit/hr-storage.test.js`
+- [ ] T037 [P] [HU5] Añadir pruebas de integración de solicitud, aprobación/rechazo con comentario y saldo en `tests/integration/permissions.test.js`
+- [ ] T038 [HU5] Implementar el catálogo de tipos de permiso con marca de remuneración y derecho anual de días
+- [ ] T039 [HU5] Implementar el formulario de solicitud de permiso del empleado con días solicitados
+- [ ] T040 [HU5] Implementar la bandeja de aprobación de la jefatura con comentario persistido y bloqueo de autoaprobación
+- [ ] T041 [HU5] Validar fechas, superposición, saldo derivado del derecho anual y dotación mínima configurable del área
+- [ ] T042 [HU5] Actualizar estado, saldo y calendario derivado al resolver, y notificar al empleado
 
 **Punto de control**: HU5 funcional y trazable.
 
@@ -204,15 +204,15 @@
 
 ## Fase 12: HU10 - Beneficios (Prioridad: P2)
 
-**Objetivo**: Administrar el catálogo de beneficios e inscribir colaboradores con historial.
+**Objetivo**: Administrar el catálogo de beneficios con estado, inscribir colaboradores con vigencia e historial, y consolidar su costo.
 
-**Prueba Independiente**: Un administrador crea un beneficio, inscribe a un colaborador y una inscripción duplicada se rechaza.
+**Prueba Independiente**: Un administrador crea un beneficio, inscribe a un colaborador, finaliza la inscripción y desactiva el beneficio; una inscripción duplicada activa o en un beneficio inactivo se rechaza.
 
-- [ ] T069 [P] [HU10] Añadir pruebas unitarias de beneficios e inscripciones en `tests/unit/hr-storage.test.js`
-- [ ] T070 [P] [HU10] Añadir pruebas de integración de inscripción en `tests/integration/benefits.test.js`
-- [ ] T071 [HU10] Implementar el catálogo de beneficios con nombre, proveedor y costo
-- [ ] T072 [HU10] Implementar la inscripción y el historial de beneficios por empleado
-- [ ] T073 [HU10] Impedir inscripciones duplicadas y bloquear la eliminación de beneficios con inscripciones activas
+- [ ] T069 [P] [HU10] Añadir pruebas unitarias de beneficios, vigencia de inscripciones y consolidación de costo en `tests/unit/hr-storage.test.js`
+- [ ] T070 [P] [HU10] Añadir pruebas de integración de inscripción, finalización y desactivación en `tests/integration/benefits.test.js`
+- [ ] T071 [HU10] Implementar el catálogo de beneficios con nombre, proveedor, costo y estado (activo/inactivo), incluyendo actualización de costo
+- [ ] T072 [HU10] Implementar la inscripción con estado, la finalización con fecha de término y el historial por empleado
+- [ ] T073 [HU10] Impedir inscripciones duplicadas activas y en beneficios inactivos, y bloquear la eliminación/desactivación de beneficios con inscripciones activas
 
 **Punto de control**: HU10 funcional y con costo consolidado.
 

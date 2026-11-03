@@ -162,9 +162,9 @@ Datos simulados en JSON con la misma estructura de las 14 entidades:
 3. **Simulador de Liquidación:** selección de empleado y `PERIODOS_NOMINA` para desglosar en vivo:
    `sueldo_liquido = total_haberes - sum(DETALLES_LIQUIDACION de deducciones)`,
    renderizando los renglones clasificados según `CONCEPTOS_NOMINA.tipo_concepto` (`haber` / `deduccion`).
-4. **Gestión de Permisos:** formulario de autoservicio con `TIPOS_PERMISO` (incluido `es_remunerado`) y bandeja de aprobación de la jefatura sobre `SOLICITUDES_PERMISO.estado`.
+4. **Gestión de Permisos:** formulario de autoservicio con `TIPOS_PERMISO` (`es_remunerado` y `dias_anuales`), saldo derivado, `dias_solicitados`, comentario de resolución y bandeja de aprobación de la jefatura sobre `SOLICITUDES_PERMISO.estado`, con validación de dotación mínima y bloqueo de autoaprobación.
 5. **Asistencia y Horas Extras:** registro diario de entrada/salida, cálculo de horas y validación de horas extras por la jefatura directa.
-6. **Beneficios y Desempeño:** catálogo de beneficios, inscripción de empleados y evaluaciones periódicas con calificación objetiva.
+6. **Beneficios y Desempeño:** catálogo de beneficios con estado y costo actualizable, inscripción con vigencia (activa/finalizada), baja y evaluaciones periódicas con calificación objetiva.
 
 ## Datos Sensibles y Mitigación de Sesgos
 
