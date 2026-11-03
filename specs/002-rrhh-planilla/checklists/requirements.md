@@ -10,7 +10,6 @@
 - [x] Enfocada en el valor para el usuario y las necesidades del negocio.
 - [x] Escrita para partes interesadas no técnicas.
 - [x] Todas las secciones obligatorias completadas.
-- [x] Cada historia de usuario tiene un responsable asignado.
 
 ## Completitud de los requisitos
 
@@ -39,7 +38,6 @@
 - [x] `spec.md`, `plan.md`, `data-model.md` y `tasks.md` usan la misma numeración de HU.
 - [x] No hay referencias rotas entre `spec.md`, `plan.md`, `data-model.md` y `tasks.md`.
 - [x] Cada HU tiene tareas de prueba e implementación en `tasks.md`.
-- [x] Cada integrante tiene al menos una HU y tareas asignadas.
 - [x] El alcance del MVP coincide con las historias P1.
 - [x] Los roles del RBAC coinciden con `plan.md` y `data-model.md`.
 

@@ -146,7 +146,7 @@ El detalle de atributos, claves y relaciones está en [data-model.md](data-model
 
 ## Usuarios y Roles (RBAC)
 
-| Rol | Entidades con acceso | Responsabilidades | Privilegios |
+| Rol | Entidades con acceso | Funciones | Privilegios |
 |---|---|---|---|
 | **Administrador de RRHH** | `DEPARTAMENTOS`, `CARGOS`, `EMPLEADOS`, `CONTRATOS_EMPLEADO`, `BENEFICIOS` | Altas/bajas, cargos, estructura contractual y beneficios. | Total sobre fichas de personal. |
 | **Encargado de Nómina** | `PERIODOS_NOMINA`, `CONCEPTOS_NOMINA`, `LIQUIDACIONES`, `DETALLES_LIQUIDACION` | Configura haberes/deducciones, ejecuta la corrida mensual y emite papeletas. | Control de cálculos y cierres; sin acceso a datos médicos. |
@@ -199,8 +199,8 @@ Cada fase termina con su prueba independiente y con las tareas de `tasks.md` mar
 | Hito | Plazo | Entregables |
 |---|---|---|
 | **1. Borrador del Repositorio** | 20 de octubre | Modelo ER de las 14 entidades, imagen del diagrama y plan inicial. |
-| **2. Especificación Funcional** | Fin de octubre | `spec.md` con historias de usuario, responsables y criterios Gherkin. |
-| **3. Tareas Técnicas** | Principios de noviembre | `tasks.md` con tareas atómicas y asignadas por integrante. |
+| **2. Especificación Funcional** | Fin de octubre | `spec.md` con historias de usuario y criterios Gherkin. |
+| **3. Tareas Técnicas** | Principios de noviembre | `tasks.md` con tareas atómicas. |
 | **4. Construcción del MVP** | Mediados de noviembre | Código funcional (HTML/CSS/JS) con datos mockeados. |
 | **5. Entrega Final** | Semana del 30 de noviembre | Demo funcional (5 min), repositorio final y `README.md` completo. |
 

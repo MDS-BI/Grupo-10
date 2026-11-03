@@ -16,16 +16,13 @@ El objetivo del MVP es centralizar las fichas laborales, formalizar contratos, g
 - El **panel de inicio**, el **marco de navegación**, la **búsqueda de entidades** y la **gestión de documentos** son capacidades del módulo base y se especifican en `../001-erp-base-module/spec.md`.
 - Este módulo **reutiliza** esas capacidades y agrega las pantallas, reglas de negocio y datos de RRHH.
 - El módulo base no se modifica para agregar reglas de RRHH: la extensión se realiza mediante configuración y módulos de dominio.
-- Las historias de usuario de este documento están asignadas a los integrantes del grupo y son la fuente para `tasks.md`.
+- Las historias de usuario de este documento son la fuente para `tasks.md`.
 
 ## Escenarios de Usuario y Pruebas *(obligatorio)*
 
 > **Prioridades**: P1 = imprescindible para el MVP; P2 = necesaria para completar el alcance; P3 = mejora posterior.
-> **Responsable**: integrante del grupo encargado de la historia y de sus tareas asociadas.
 
 ### Historia de Usuario 1 - Gestión de Departamentos de la Empresa (Prioridad: P1)
-
-**Responsable**: Ángel Gidi
 
 Como administrador de RRHH, quiero crear, editar y organizar los departamentos de la empresa, para estructurar correctamente la organización y asociar al personal.
 
@@ -44,8 +41,6 @@ Como administrador de RRHH, quiero crear, editar y organizar los departamentos d
 
 ### Historia de Usuario 2 - Gestión del Catálogo de Cargos y Niveles (Prioridad: P1)
 
-**Responsable**: Ángel Gidi
-
 Como administrador de RRHH, quiero definir y actualizar los cargos de la empresa especificando su nombre y nivel de grado, para estandarizar los puestos de trabajo y asignarlos correctamente en los contratos del personal.
 
 **Por qué esta prioridad**: Mantener un catálogo de cargos estructurado es indispensable para la formalización contractual, la equidad salarial y la correcta definición de funciones dentro de la organización.
@@ -61,8 +56,6 @@ Como administrador de RRHH, quiero definir y actualizar los cargos de la empresa
 ---
 
 ### Historia de Usuario 3 - Actualización de datos personales y de contacto (Prioridad: P1)
-
-**Responsable**: José Sellán
 
 Como empleado, quiero actualizar mis datos personales, de contacto y bancarios para que la empresa pueda comunicarse conmigo correctamente y emitir mis pagos sin errores.
 
@@ -81,8 +74,6 @@ Como empleado, quiero actualizar mis datos personales, de contacto y bancarios p
 
 ### Historia de Usuario 4 - Gestión de altas y contratos de nuevos colaboradores (Prioridad: P1)
 
-**Responsable**: José Sellán
-
 Como administrador de RRHH, quiero registrar un nuevo colaborador y generar su contrato de trabajo para mantener formalizada su incorporación a la empresa.
 
 **Por qué esta prioridad**: Un proceso de alta ágil y estructurado asegura el cumplimiento legal laboral, la correcta integración a la nómina y el acceso oportuno del colaborador a los sistemas internos.
@@ -99,8 +90,6 @@ Como administrador de RRHH, quiero registrar un nuevo colaborador y generar su c
 ---
 
 ### Historia de Usuario 5 - Aprobación de solicitudes de vacaciones y permisos (Prioridad: P1)
-
-**Responsable**: Ricardo Cuevas
 
 Como jefatura o supervisor, quiero revisar y aprobar o rechazar las solicitudes de vacaciones y permisos de mi equipo para asegurar la continuidad operacional del área.
 
@@ -119,8 +108,6 @@ Como jefatura o supervisor, quiero revisar y aprobar o rechazar las solicitudes 
 
 ### Historia de Usuario 6 - Registrar y consultar la asistencia diaria (Prioridad: P2)
 
-**Responsable**: Lucas Lemarie
-
 Como jefatura o encargado de nómina, quiero registrar y consultar la asistencia diaria y las horas trabajadas del personal para alimentar los indicadores de ausentismo y el cálculo de la nómina.
 
 **Por qué esta prioridad**: Los registros de asistencia son la fuente de verdad para medir ausentismo y horas efectivas; sin ellos, los indicadores del panel y las liquidaciones carecen de respaldo. Es una capacidad necesaria para la operación, aunque no bloquea la gestión básica de personal y permisos.
@@ -138,8 +125,6 @@ Como jefatura o encargado de nómina, quiero registrar y consultar la asistencia
 ---
 
 ### Historia de Usuario 7 - Ejecutar y consultar la liquidación de nómina (Prioridad: P1)
-
-**Responsable**: Lucas Lemarie
 
 Como encargado de nómina, quiero calcular y consultar las liquidaciones de un período para pagar correctamente haberes y deducciones y entregar la papeleta al colaborador.
 
@@ -161,8 +146,6 @@ Como encargado de nómina, quiero calcular y consultar las liquidaciones de un p
 
 ### Historia de Usuario 8 - Control de acceso basado en roles (Prioridad: P1)
 
-**Responsable**: Benjamín (valdechito)
-
 Como administrador de RRHH, quiero asignar roles y limitar las acciones y los datos a los que accede cada usuario para proteger la información sensible y asegurar que cada persona realice solo las tareas que le corresponden.
 
 **Por qué esta prioridad**: El módulo maneja datos personales, salariales y de salud; el acceso debe restringirse por rol antes de usarlo con datos reales. La confidencialidad salarial y la separación entre jefatura, nómina y administración son requisitos del negocio.
@@ -183,8 +166,6 @@ Como administrador de RRHH, quiero asignar roles y limitar las acciones y los da
 
 ### Historia de Usuario 9 - Validación de Asistencia y Aprobación de Horas Extras (Prioridad: P2)
 
-**Responsable**: Vicente Morales
-
 Como jefatura directa, quiero visualizar y aprobar los registros de asistencia ya finalizados de mi equipo, para autorizar las horas extras y asegurar que el cálculo sea exacto antes del proceso de nómina.
 
 **Por qué esta prioridad**: Actúa como un paso de control de calidad sobre la asistencia registrada (HU6), garantizando que las horas extras estén validadas por una jefatura sin exponer datos salariales confidenciales entre pares.
@@ -202,8 +183,6 @@ Como jefatura directa, quiero visualizar y aprobar los registros de asistencia y
 
 ### Historia de Usuario 10 - Inscripción y gestión de beneficios (Prioridad: P2)
 
-**Responsable**: Ricardo Cuevas
-
 Como administrador de RRHH, quiero administrar el catálogo de beneficios e inscribir a los colaboradores para que accedan a los planes ofrecidos por la empresa y su costo quede reflejado en la gestión de personal.
 
 **Por qué esta prioridad**: Los beneficios son parte de la propuesta laboral y del costo de personal; su registro permite auditar inscripciones y consolidar el gasto asociado.
@@ -220,8 +199,6 @@ Como administrador de RRHH, quiero administrar el catálogo de beneficios e insc
 ---
 
 ### Historia de Usuario 11 - Registro de evaluaciones de desempeño (Prioridad: P2)
-
-**Responsable**: Vicente Morales
 
 Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis colaboradores directos para dejar evidencia objetiva de su rendimiento y acordar mejoras.
 

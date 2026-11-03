@@ -100,10 +100,10 @@ El proyecto sigue **Spec-Driven Development (SDD)** con Speckit:
 1. `spec.md`: historias de usuario, requisitos y criterios de éxito.
 2. `plan.md`: contexto técnico, arquitectura y fases.
 3. `data-model.md`: entidades, relaciones y reglas de integridad.
-4. `tasks.md`: tareas atómicas, pruebas y responsables.
+4. `tasks.md`: tareas atómicas y pruebas.
 5. Implementación incremental con retorno al spec cuando cambia el alcance.
 
-Cada historia de usuario tiene un responsable asignado y tareas trazables en `tasks.md`.
+Las tareas técnicas están trazadas en `tasks.md`.
 
 ## Requisitos
 
@@ -146,7 +146,7 @@ El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`
 | Modelo entidad-relación de 14 entidades | Completado |
 | Especificación del módulo de RRHH | Completado |
 | Plan de implementación | Completado |
-| Tareas y asignación por integrante | Completado |
+| Tareas técnicas | Completado |
 | Implementación del MVP | En desarrollo |
 | Pruebas automatizadas | En desarrollo |
 | Demo integrada | Pendiente |
@@ -156,20 +156,20 @@ El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`
 - [Especificación del módulo de RRHH](specs/002-rrhh-planilla/spec.md)
 - [Plan de implementación](specs/002-rrhh-planilla/plan.md)
 - [Modelo de datos](specs/002-rrhh-planilla/data-model.md)
-- [Tareas y responsables](specs/002-rrhh-planilla/tasks.md)
+- [Tareas](specs/002-rrhh-planilla/tasks.md)
 - [Inicio rápido](specs/002-rrhh-planilla/quickstart.md)
 - [Módulo base ERP](specs/001-erp-base-module/spec.md)
 
 ## Equipo
 
-| Integrante | Historias asignadas |
-|---|---|
-| Ángel Gidi | HU1, HU2 |
-| José Sellán | HU3, HU4 |
-| Lucas Lemarie | HU6, HU7 |
-| Benjamín (valdechito) | HU8 |
-| Ricardo Cuevas | HU5, HU10 |
-| Vicente Morales | HU9, HU11 |
+| Integrante |
+|---|
+| Ángel Gidi |
+| José Sellán |
+| Lucas Lemarie |
+| Benjamín (valdechito) |
+| Ricardo Cuevas |
+| Vicente Morales |
 
 ## Cronograma
 
@@ -177,7 +177,7 @@ El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`
 |---|---|---|
 | Borrador del repositorio | 20 de octubre | Modelo ER y plan inicial. |
 | Especificación funcional | Fin de octubre | Historias de usuario y criterios de aceptación. |
-| Tareas técnicas | Principios de noviembre | `tasks.md` con responsables. |
+| Tareas técnicas | Principios de noviembre | `tasks.md` con tareas atómicas. |
 | Construcción del MVP | Mediados de noviembre | Código funcional con datos de demo. |
 | Entrega final | Semana del 30 de noviembre | Demo de 5 minutos y repositorio final. |
 
