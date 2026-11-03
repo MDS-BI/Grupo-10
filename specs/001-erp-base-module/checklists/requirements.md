@@ -2,7 +2,7 @@
 
 **Propósito**: Validar la completitud y calidad de la especificación antes de proceder a la planificación
 **Creada**: 2026-07-08
-**Funcionalidad**: [Enlace a spec.md](spec.md)
+**Funcionalidad**: [Enlace a spec.md](../spec.md)
 
 ## Calidad del Contenido
 

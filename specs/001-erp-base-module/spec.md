@@ -1,42 +1,42 @@
-# Especificación de la Funcionalidad: Módulo de Recursos Humanos y Planilla (HR / Payroll)
+# Especificación de la Funcionalidad: Módulo Base de Software de Planificación de Recursos Empresariales (ERP)
 
-**Rama de la funcionalidad**: 002-rrhh-planilla  
+**Rama de la funcionalidad**: 001-erp-base-module  
 **Creada**: 2026-07-08  
 **Estado**: Borrador  
-**Entrada**: Descripción del usuario: "Gestionar la información del personal y la administración de recursos humanos: fichas laborales, contratos, permisos, asistencia, beneficios, evaluaciones y nóminas de pago, sobre el modelo relacional oficial del ERP."
+**Entrada**: Descripción del usuario: "Construir un módulo base de software de planificación de recursos empresariales (ERP) que pueda extenderse en módulos ERP personalizados. Debe proporcionar gestión de datos maestros (entidades) y documentos transaccionales vinculados con capacidades de crear/editar/eliminar/buscar."
 
 ## Propósito
 
-Este proyecto implementa el módulo de Recursos Humanos y Planilla (HR / Payroll) sobre el módulo base de ERP. Reutiliza los patrones de datos maestros, documentos, navegación, validación, persistencia y búsqueda del ERP base, y los extiende con las 14 tablas del módulo HR/Payroll definidas en `erp_data_model.md`: estructura organizacional, personal, contratos, permisos, asistencia, nómina, beneficios y desempeño.
-
-El objetivo del MVP es centralizar las fichas laborales, formalizar contratos, gestionar permisos de forma trazable, registrar asistencia y simular la liquidación mensual, con control de acceso por roles y protección de datos sensibles. La arquitectura de datos y las claves foráneas oficiales se detallan en `erp_data_model.md` (sección 1); `data-model.md` es la vista de negocio en español del mismo módulo. El alcance y los roles se detallan en `plan.md`.
+Este proyecto sirve como módulo base reutilizable para construir módulos ERP personalizados. Establece los patrones comunes que todo módulo ERP necesita: gestionar registros de datos maestros (**Entidades**) y sus **Documentos** transaccionales asociados, con navegación, validación, persistencia y búsqueda ya implementadas, de modo que los módulos personalizados solo necesiten definir sus campos y reglas específicos del dominio.
 
 ## Escenarios de Usuario y Pruebas *(obligatorio)*
 
-### Historia de Usuario 1 - Gestión de Departamentos de la Empresa (Prioridad: P1)
-Como administrador de RRHH, quiero crear, editar y organizar los departamentos de la empresa, para estructurar correctamente la organización y asociar al personal.
+### Historia de Usuario 1 - Crear y organizar entidades (Prioridad: P1)
+Como usuario de negocio, quiero crear entradas de entidad con detalles claros para poder construir y mantener los datos maestros del módulo.
 
-**Por qué esta prioridad**: La estructura departamental es el cimiento organizativo; sin departamentos creados, no es posible asignar a los empleados ni estructurar la jerarquía de la compañía.
-**Prueba Independiente**: Un administrador puede añadir un nuevo departamento con sus datos básicos, verificar que aparece en la lista, editar su nombre o jefe asignado, y ver los cambios reflejados de inmediato.
-**Escenarios de Aceptación**: 
+**Por qué esta prioridad**: Este es el valor central del producto porque, sin crear entidades, el resto de la experiencia no puede aportar valor.
 
-1. Dado que el administrador está en la sección de estructura organizacional, cuando crea un nuevo departamento indicando un nombre y código válido, entonces el sistema guarda el registro y aparece en la lista de departamentos.
-2. Dado que un departamento ya existe, cuando el administrador edita el nombre o cambia el jefe de departamento asociado, entonces la información se actualiza correctamente.
-3. Dado que se está creando un departamento, cuando se deja el nombre obligatorio en blanco, entonces el sistema impide guardar y explica qué información falta.
-
----
-
-### Historia de Usuario 2 - Gestión del Catálogo de Cargos y Niveles (Prioridad: P1)
-Como administrador de RRHH, quiero definir y actualizar los cargos de la empresa especificando su nombre y nivel de grado, para estandarizar los puestos de trabajo y asignarlos correctamente en los contratos del personal.
-
-**Por qué esta prioridad**: Mantener un catálogo de cargos estructurado es indispensable para la formalización contractual, la equidad salarial y la correcta definición de funciones dentro de la organización.
-**Prueba Independiente**: Un administrador puede registrar un nuevo cargo con su nivel de grado, verificar que aparece en el catálogo, modificar sus detalles o eliminarlo si no está en uso.
+**Prueba Independiente**: Un usuario puede abrir el módulo, añadir una nueva entidad y verla aparecer en la lista.
 
 **Escenarios de Aceptación**:
 
-1. Dado que el administrador visualiza el catálogo de cargos, cuando añade un nuevo cargo indicando nombre y nivel de grado, entonces el registro queda guardado y disponible para asignación.
-2. Dado un cargo existente que ha cambiado de categoría, cuando el administrador edita su nivel de grado, entonces la actualización se refleja correctamente en el sistema.
-3. Dado un cargo que se encuentra vinculado activamente a contratos de empleados, cuando se intenta eliminar, entonces el sistema bloquea la acción para proteger la integridad de los datos laborales.
+1. **Dado** que un usuario está viendo la lista de entidades, **cuando** crea una nueva entidad con un nombre y un código, **entonces** la nueva entidad se guarda y aparece en la lista.
+2. **Dado** que un usuario está creando una entidad, **cuando** deja la información obligatoria en blanco, **entonces** el sistema impide guardar y explica qué se necesita.
+
+---
+
+### Historia de Usuario 2 - Editar y eliminar entidades (Prioridad: P1)
+Como usuario de negocio, quiero actualizar o eliminar entidades cuando cambien los datos maestros para que los registros se mantengan precisos.
+
+**Por qué esta prioridad**: Mantener los registros actualizados es esencial para la confianza en la herramienta y para soportar las operaciones comerciales diarias.
+
+**Prueba Independiente**: Un usuario puede seleccionar una entidad existente, cambiar su información o eliminarla, y la lista refleja el cambio.
+
+**Escenarios de Aceptación**:
+
+1. **Dada** una entidad que ya existe en la lista, **cuando** el usuario edita sus detalles, **entonces** la información actualizada se guarda y se muestra en la lista.
+2. **Dada** una entidad que ya no es relevante, **cuando** el usuario la elimina, **entonces** desaparece de la lista y deja de aparecer en los resultados de búsqueda.
+3. **Dadas** cientos de entidades almacenadas, **cuando** el usuario edita o elimina una, **entonces** la lista se actualiza correctamente y sigue siendo ágil.
 
 ---
 
@@ -59,115 +59,174 @@ Como usuario de negocio, quiero aterrizar en un panel estilo ERP con botones de 
 
 ---
 
-### Historia de Usuario 4 - Actualización de datos personales y de contacto (Prioridad: P1)
-Como empleado, quiero actualizar mis datos personales, de contacto y bancarios para que la empresa pueda comunicarse conmigo correctamente y emitir mis pagos sin errores.
+### Historia de Usuario 4 - Gestionar entidades y documentos en una pantalla dedicada (Prioridad: P1)
 
-**Por qué esta prioridad**: Mantener la información de los colaboradores al día previene problemas administrativos, de nómina y asegura una comunicación fluida y legalmente válida.
+Como usuario de negocio, quiero una pantalla dedicada donde pueda añadir, editar y eliminar entidades y sus documentos, para poder gestionar los datos del módulo en un lugar enfocado.
 
-**Prueba Independiente**: Un empleado puede modificar su dirección o información de contacto en su perfil, y los cambios se reflejan inmediatamente tanto en su vista como en el registro accesible para RRHH.
+**Por qué esta prioridad**: Esto preserva el valor central de las capacidades de gestión del módulo, presentado como una única pantalla de gestión accesible desde la barra lateral y las acciones rápidas del panel.
 
-**Escenarios de Aceptación**:
-
-1. **Dada** la ficha del perfil del empleado, **cuando** el usuario modifica su número de teléfono o dirección, **entonces** la nueva información se guarda de forma segura y se muestra actualizada en pantalla.
-2. **Dado** que el empleado necesita cambiar su cuenta bancaria para el depósito de su sueldo, **cuando** ingresa los nuevos datos y adjunta el certificado del banco, **entonces** la solicitud queda pendiente de validación y se notifica al administrador de RRHH.
-
----
-
-### Historia de Usuario 5 - Gestión de altas y contratos de nuevos colaboradores (Prioridad: P1)
-Como administrador de RRHH, quiero registrar un nuevo colaborador y generar su contrato de trabajo para mantener formalizada su incorporación a la empresa.
-
-**Por qué esta prioridad**: Un proceso de alta ágil y estructurado asegura el cumplimiento legal laboral, la correcta integración a la nómina y el acceso oportuno del colaborador a los sistemas internos.
-
-**Prueba Independiente**: Un administrador de RRHH puede ingresar los datos de un nuevo empleado, adjuntar los documentos legales requeridos y generar el contrato basado en una plantilla predefinida.
+**Prueba Independiente**: Un usuario puede navegar a la pantalla de gestión mediante la barra lateral o una acción rápida, alternar entre la gestión de entidades y documentos, y volver al panel, añadiendo, editando y eliminando con éxito una entidad y un documento.
 
 **Escenarios de Aceptación**:
 
-1. **Dado** el formulario de ingreso de personal, **cuando** el administrador completa los datos obligatorios (RUT, cargo, sueldo, fecha de inicio) y sube los documentos requeridos, **entonces** el perfil del empleado se crea exitosamente en el sistema.
-2. **Dada** la creación del perfil, **cuando** el administrador selecciona la plantilla del contrato correspondiente al cargo, **entonces** el sistema genera un documento editable y con los datos precargados del colaborador.
+1. **Dado** que el usuario está en la pantalla de gestión, **cuando** mira la navegación, **entonces** la barra lateral del espacio de trabajo ofrece botones de módulo para Entidades, Documentos y Panel con el módulo activo resaltado.
+2. **Dada** la barra lateral visible, **cuando** el usuario activa el botón Entidades, **entonces** se muestra el contenido de gestión de entidades.
+3. **Dada** la barra lateral visible, **cuando** el usuario activa el botón Documentos, **entonces** se muestra el contenido de gestión de documentos.
+4. **Dado** que el usuario está en la pantalla de gestión, **cuando** mira la pantalla, **entonces** la lista de entidades no se muestra.
+5. **Dado** que el usuario está en la pantalla de gestión, **cuando** crea una nueva entidad, **entonces** la entidad se guarda.
+6. **Dada** una entidad existente, **cuando** el usuario edita sus detalles, **entonces** la información actualizada se guarda.
+7. **Dada** una entidad que ya no es relevante, **cuando** el usuario la elimina, **entonces** se elimina junto con sus documentos.
+8. **Dada** una entidad existente, **cuando** el usuario añade, edita o elimina un documento, **entonces** los cambios del documento se guardan y quedan asociados a esa entidad.
+9. **Dado** que el usuario está en la pantalla de gestión, **cuando** activa el botón Panel en la barra lateral, **entonces** vuelve al panel de inicio.
 
 ---
 
-### Historia de Usuario 6 - Aprobación de solicitudes de vacaciones y permisos (Prioridad: P1)
-Como jefatura o supervisor, quiero revisar y aprobar o rechazar las solicitudes de vacaciones y permisos de mi equipo para asegurar la continuidad operacional del área.
+### Historia de Usuario 5 - Definir un perfil de configuración del módulo (Prioridad: P1)
 
-**Por qué esta prioridad**: Gestionar las ausencias de manera oportuna evita cuellos de botella en la operación diaria y mantiene una planificación transparente y justa del personal a cargo.
+Como desarrollador de módulos, quiero declarar un único archivo de configuración que defina la identidad, terminología, campos personalizados y reglas de mi módulo, para adaptar el módulo base en un módulo específico sin modificar su código central.
 
-**Prueba Independiente**: Una jefatura puede visualizar las solicitudes pendientes de su equipo, verificar los días disponibles en el saldo y aprobarlas o rechazarlas con un comentario opcional.
+**Por qué esta prioridad**: La adaptación mediante configuración es lo que convierte este proyecto de una aplicación fija en una base reutilizable. Sin ella, cada módulo personalizado requeriría editar archivos fuente centrales, lo que frustra el propósito de la plantilla; todas las historias de personalización posteriores dependen de que este mecanismo exista primero.
+
+**Prueba Independiente**: Un desarrollador proporciona un archivo de configuración que define un perfil de Ventas (nombre del módulo, mapeos Entidad→Cliente, campos personalizados, ciclo de vida), y la aplicación se presenta plenamente como un módulo de Ventas; al quitar el archivo se restauran los valores predeterminados de la base sin errores.
 
 **Escenarios de Aceptación**:
 
-1. **Dada** una solicitud de vacaciones enviada por un miembro del equipo, **cuando** el supervisor revisa las fechas y el saldo de días disponibles, **entonces** puede hacer clic en "Aprobar" y el sistema actualiza el calendario y el saldo del empleado.
-2. **Dada** una solicitud que genera un conflicto de dotación mínima en el área, **cuando** el supervisor la rechaza indicando un motivo, **entonces** la solicitud cambia de estado y se notifica al empleado con el comentario ingresado.
+1. **Dado** que un archivo de configuración define el nombre del módulo, **cuando** la aplicación carga, **entonces** el panel de inicio y el marco del espacio de trabajo muestran el nombre configurado.
+2. **Dada** una configuración completa (nombre, mapeos de términos, campos personalizados, ciclo de vida), **cuando** la aplicación carga, **entonces** el módulo se presenta plenamente bajo la identidad configurada sin que se vean términos del módulo base en ningún sitio.
+3. **Dado** que no se proporciona configuración, **cuando** la aplicación carga, **entonces** la aplicación retrocede a los valores predeterminados integrados Entidad/Documento sin errores.
+4. **Dada** una configuración con valores inválidos o conflictivos, **cuando** la aplicación carga, **entonces** el sistema informa del problema con claridad en lugar de fallar silenciosamente.
 
 ---
 
-### Historia de Usuario 7 - Registrar y consultar la asistencia diaria (Prioridad: P2)
-Como jefatura o encargado de nómina, quiero registrar y consultar la asistencia diaria y las horas trabajadas del personal para alimentar los indicadores de ausentismo y el cálculo de la nómina.
+### Historia de Usuario 6 - Reetiquetar pantallas desde la configuración (Prioridad: P1)
 
-**Por qué esta prioridad**: Los registros de asistencia son la fuente de verdad para medir ausentismo y horas efectivas; sin ellos, los indicadores del panel y las liquidaciones carecen de respaldo. Es una capacidad necesaria para la operación, aunque no bloquea la gestión básica de personal y permisos.
+Como desarrollador de módulos, quiero que todas las etiquetas visibles para el usuario deriven de la configuración, para que un módulo adaptado hable su idioma de dominio de forma consistente en todo momento.
 
-**Prueba Independiente**: Una jefatura puede registrar la entrada y salida de un colaborador, ver las horas calculadas y consultar el resumen del período; un registro duplicado o inválido se rechaza.
+**Por qué esta prioridad**: Los usuarios confían en un módulo que dice consistentemente "Cliente" y "Pedido de Venta" en lugar de dejar filtrarse una "Entidad" genérica por media interfaz; la terminología inconsistente hace que los módulos adaptados parezcan rotos. Esta historia depende del perfil de configuración (Historia de Usuario 5).
+
+**Prueba Independiente**: Un desarrollador mapea Entidad→Cliente y Documento→Pedido de Venta en la configuración, y cada pestaña, botón, etiqueta de formulario, encabezado y mensaje en las tres pantallas usa los términos mapeados.
 
 **Escenarios de Aceptación**:
 
-1. **Dado** un colaborador activo y una fecha laboral, **cuando** se registran la hora de entrada y la hora de salida, **entonces** el sistema calcula las horas trabajadas y guarda el registro.
-2. **Dado** un registro existente para el mismo colaborador y fecha, **cuando** se intenta crear otro, **entonces** el sistema lo impide y explica que la jornada ya está registrada.
-3. **Dado** un registro con hora de salida anterior o igual a la hora de entrada, **cuando** se guarda, **entonces** el sistema lo rechaza con una explicación clara.
-4. **Dados** los registros de un período, **cuando** la jefatura consulta por área, **entonces** ve las horas trabajadas, las ausencias y un resumen de ausentismo.
-5. **Dado** un colaborador desvinculado, **cuando** se intenta registrar asistencia, **entonces** el sistema lo impide y conserva el historial existente.
+1. **Dados** mapeos de términos definidos en la configuración, **cuando** cualquier pantalla carga, **entonces** pestañas, botones, etiquetas de formulario, encabezados y mensajes de estado vacío muestran los términos configurados.
+2. **Dado** que las etiquetas han sido remapeadas, **cuando** el usuario navega entre pantallas, **entonces** el comportamiento de navegación no cambia.
+3. **Dado** que no se proporcionan mapeos, **cuando** cualquier pantalla carga, **entonces** se muestran los términos predeterminados Entidad/Documento.
 
 ---
 
-### Historia de Usuario 8 - Ejecutar y consultar la liquidación de nómina (Prioridad: P1)
-Como encargado de nómina, quiero calcular y consultar las liquidaciones de un período para pagar correctamente haberes y deducciones y entregar la papeleta al colaborador.
+### Historia de Usuario 7 - Declarar campos personalizados para los registros (Prioridad: P1)
 
-**Por qué esta prioridad**: La liquidación es el resultado central del módulo: concentra contrato, conceptos y período, y debe ser trazable, consistente y visible solo para quienes corresponda.
+Como desarrollador de módulos, quiero declarar campos adicionales para entidades y documentos en la configuración, para que aparezcan automáticamente en formularios, listas, validación y búsqueda sin escribir código de interfaz.
 
-**Prueba Independiente**: Un encargado de nómina selecciona un período y un colaborador con contrato vigente, ejecuta la liquidación, revisa el desglose de haberes y deducciones, y el colaborador ve su propia papeleta.
+**Por qué esta prioridad**: Los módulos personalizados existen porque sus registros contienen datos específicos del dominio (el límite de crédito de un cliente, la fecha de vencimiento de una factura). Si añadir campos requiere editar formularios y validación a mano, la adaptación es propensa a errores y no escala. Esta historia depende del perfil de configuración (Historia de Usuario 5).
+
+**Prueba Independiente**: Un desarrollador declara un campo numérico obligatorio personalizado en las entidades; se muestra como entrada numérica en el formulario, bloquea el guardado cuando está en blanco, muestra los valores guardados en las listas y coincide en las búsquedas.
 
 **Escenarios de Aceptación**:
 
-1. **Dado** un período en estado borrador y un colaborador con contrato vigente, **cuando** se ejecuta la liquidación, **entonces** el sistema calcula el total de haberes, las deducciones y el sueldo líquido, y guarda la liquidación con sus detalles.
-2. **Dados** los conceptos de nómina clasificados como haber o deducción, **cuando** se consulta la liquidación, **entonces** se muestra el desglose por concepto y se cumple que el sueldo líquido es igual al total de haberes menos las deducciones.
-3. **Dado** un período ya calculado, **cuando** se intenta generar una segunda liquidación para el mismo colaborador, **entonces** el sistema la impide y explica que ya existe.
-4. **Dado** un período cerrado, **cuando** se intenta modificar una liquidación, **entonces** el sistema lo impide; solo un usuario autorizado puede reabrirlo dejando registro de auditoría.
-5. **Dado** un colaborador autenticado, **cuando** consulta sus liquidaciones, **entonces** solo ve las propias y puede descargar su papeleta.
-6. **Dado** un colaborador sin contrato vigente en el período, **cuando** se intenta liquidar, **entonces** el sistema lo rechaza con una explicación clara.
+1. **Dado** un campo personalizado de entidad de tipo número declarado como obligatorio, **cuando** el usuario crea o edita una entidad, **entonces** el campo se muestra como entrada numérica y un valor en blanco impide guardar con una explicación clara.
+2. **Dado** un campo personalizado con un valor guardado, **cuando** el usuario ve la lista o la vista de detalle, **entonces** el valor se muestra.
+3. **Dados** campos personalizados declarados, **cuando** el usuario busca usando un término que coincide con un valor de campo personalizado, **entonces** se devuelven los registros coincidentes.
+4. **Dado** que no hay campos personalizados declarados, **cuando** la aplicación se ejecuta, **entonces** el comportamiento es idéntico al del módulo base sin modificar.
 
 ---
 
-### Historia de Usuario 9 - Control de acceso basado en roles (Prioridad: P1)
-Como administrador de RRHH, quiero asignar roles y limitar las acciones y los datos a los que accede cada usuario para proteger la información sensible y asegurar que cada persona realice solo las tareas que le corresponden.
+### Historia de Usuario 8 - Buscar y encontrar entidades rápidamente (Prioridad: P2)
+Como usuario de negocio, quiero buscar mis entidades por detalles clave para encontrar rápidamente el registro que necesito.
 
-**Por qué esta prioridad**: El módulo maneja datos personales, salariales y de salud; el acceso debe restringirse por rol antes de usarlo con datos reales. La confidencialidad salarial y la separación entre jefatura, nómina y administración son requisitos del negocio.
+**Por qué esta prioridad**: La recuperación rápida mejora la utilidad cuando el conjunto de datos crece más allá de un pequeño número de entradas.
 
-**Prueba Independiente**: El administrador asigna roles a cuatro usuarios; cada uno inicia sesión y solo ve las pantallas y datos permitidos; un intento de acceso directo por URL a otra área se bloquea con un mensaje claro.
+**Prueba Independiente**: Un usuario puede introducir un término de búsqueda y ver solo las entidades coincidentes.
 
 **Escenarios de Aceptación**:
 
-1. **Dado** un usuario con rol Administrador de RRHH, **cuando** inicia sesión, **entonces** puede gestionar departamentos, cargos, colaboradores y contratos, con control total sobre las fichas de personal.
-2. **Dado** un usuario con rol Encargado de Nómina, **cuando** inicia sesión, **entonces** puede administrar períodos, conceptos y liquidaciones, pero no puede modificar fichas de personal ni acceder a datos médicos.
-3. **Dado** un usuario con rol Jefatura o Supervisor, **cuando** inicia sesión, **entonces** solo puede ver y visar permisos y asistencia de sus subordinados directos, sin visibilidad del salario base.
-4. **Dado** un usuario con rol Empleado, **cuando** inicia sesión, **entonces** solo ve sus propias papeletas y solicitudes, y no puede acceder a registros de otros colaboradores.
-5. **Dado** un usuario autenticado, **cuando** intenta acceder a una pantalla o acción fuera de sus permisos por navegación o por URL directa, **entonces** el sistema bloquea la operación, muestra un mensaje claro y no expone datos sensibles.
-6. **Dado** un usuario sin rol asignado, **cuando** intenta acceder al módulo, **entonces** el sistema le deniega el acceso hasta que un administrador le asigne un rol.
-7. **Dado** un cambio de rol realizado por un administrador, **cuando** el usuario afectado vuelve a iniciar sesión, **entonces** los nuevos permisos se aplican correctamente.
+1. **Dadas** múltiples entidades almacenadas, **cuando** el usuario busca con un término coincidente, **entonces** solo se muestran las entidades coincidentes.
+2. **Dada** una búsqueda sin coincidencias, **cuando** el usuario envía la búsqueda, **entonces** el sistema muestra un estado vacío claro y permite volver a intentarlo.
+3. **Dadas** cientos de entidades almacenadas, **cuando** el usuario busca, **entonces** los resultados coincidentes aparecen con prontitud sin retraso perceptible.
 
 ---
 
-**Historia de Usuario 10 \- Validación de Asistencia y Aprobación de Horas Extras (Prioridad: P2)** 
+### Historia de Usuario 9 - Registrar una fecha objetivo (Prioridad: P2)
+Como usuario de negocio, quiero adjuntar una fecha objetivo opcional a una entidad para planificar y ordenar los registros según cuándo vence algo.
 
-Como Jefatura Directa, **quiero** visualizar y aprobar los registros de asistencia ya finalizados de mi equipo, **para** autorizar las horas extras y asegurar que el cálculo sea exacto antes del proceso de nómina.
+**Por qué esta prioridad**: La planificación consciente de fechas mejora el valor central cuando el conjunto de datos crece, pero no es necesaria para la gestión básica.
 
-**Por qué esta prioridad:** Actúa como un paso de control de calidad sobre la asistencia registrada (HU 7), garantizando que las horas extras estén validadas por una jefatura sin exponer datos salariales confidenciales entre pares.
+**Prueba Independiente**: Un usuario puede fijar una fecha en una entidad y verla mostrada en la lista.
 
-**Prueba Independiente:** La jefatura revisa los registros diarios de su equipo, los aprueba y el sistema consolida el concepto de horas extras ocultando información confidencial como el RUT o sueldo base.
+**Escenarios de Aceptación**:
 
-**Escenarios de Aceptación:**
+1. **Dado** que un usuario está creando o editando una entidad, **cuando** introduce una fecha objetivo, **entonces** la fecha se guarda y se muestra en la lista.
+2. **Dada** una entidad con fecha fijada, **cuando** el usuario ve la lista, **entonces** las entidades con fechas pueden identificarse de un vistazo.
+3. **Dado** que un usuario deja la fecha en blanco, **cuando** guarda la entidad, **entonces** la entidad igualmente se guarda sin fecha (campo opcional).
 
-1. **Dado** un conjunto de registros de asistencia completados por los empleados, **cuando** la jefatura ingresa al panel de validación, **entonces** el sistema filtra y muestra exclusivamente los registros de su personal a cargo.  
-2. **Dado** un registro pendiente de revisión, **cuando** la jefatura lo aprueba, **entonces** el sistema marca las horas extras como autorizadas y consolidadas para alimentar las líneas de liquidación del mes.  
-3. **Dada** la interacción de la jefatura con el panel de validación, **cuando** revisa los perfiles, **entonces** la interfaz restringe visualmente el acceso a atributos sensibles del trabajador (como el sueldo base o datos bancarios).
+---
+
+### Historia de Usuario 10 - Registrar los detalles de documentos de una entidad (Prioridad: P2)
+Como usuario de negocio, quiero registrar detalles de documentos para una entidad, para mantener la actividad transaccional organizada junto a cada registro de datos maestros.
+
+**Por qué esta prioridad**: Los documentos aportan valor operativo práctico una vez que las entidades están gestionadas, pero no son necesarios para la gestión central.
+
+**Prueba Independiente**: Un usuario puede añadir un documento a una entidad y ver los detalles del documento mostrados junto a esa entidad.
+
+**Escenarios de Aceptación**:
+
+1. **Dada** una entidad en la lista, **cuando** el usuario añade un documento con detalles, **entonces** el documento se guarda y queda asociado a esa entidad.
+2. **Dado** un documento existente para una entidad, **cuando** el usuario selecciona esa entidad en la pantalla de gestión, **entonces** los detalles del documento se muestran en la vista de gestión de documentos.
+3. **Dada** una entidad eliminada, **cuando** se confirma la eliminación, **entonces** sus documentos asociados también se eliminan.
+4. **Dado** que un usuario está creando un documento, **cuando** deja la información obligatoria del documento en blanco, **entonces** el sistema impide guardar y explica qué se necesita.
+
+---
+
+### Historia de Usuario 11 - Buscar entidades en una pantalla dedicada (Prioridad: P2)
+
+Como usuario de negocio, quiero una pantalla de búsqueda dedicada para encontrar rápidamente entidades sin que los formularios de edición saturen la vista.
+
+**Por qué esta prioridad**: La recuperación rápida es valiosa cuando el conjunto de datos crece, y una pantalla separada mantiene enfocada la experiencia de gestión, pero la búsqueda no es necesaria para la gestión básica.
+
+**Prueba Independiente**: Un usuario puede abrir la pantalla de búsqueda desde la barra lateral o una acción rápida, introducir un término de búsqueda y ver solo las entidades coincidentes.
+
+**Escenarios de Aceptación**:
+
+1. **Dado** que el usuario está en la pantalla de búsqueda, **cuando** introduce un término coincidente, **entonces** solo se muestran las entidades coincidentes.
+2. **Dada** una búsqueda sin coincidencias, **cuando** el usuario envía la búsqueda, **entonces** se muestra un estado vacío claro y puede volver a intentarlo.
+3. **Dadas** cientos de entidades almacenadas, **cuando** el usuario busca desde la pantalla de búsqueda, **entonces** los resultados aparecen con prontitud sin retraso perceptible.
+4. **Dado** que el usuario está en la pantalla de búsqueda, **cuando** activa el botón Panel en la barra lateral, **entonces** vuelve al panel de inicio.
+
+---
+
+### Historia de Usuario 12 - Configurar el ciclo de vida de estados de documentos (Prioridad: P2)
+
+Como desarrollador de módulos, quiero definir los estados permitidos de los documentos y las transiciones permitidas, para que los documentos sigan el ciclo de vida del dominio en lugar de aceptar texto de estado arbitrario.
+
+**Por qué esta prioridad**: Los módulos reales necesitan ciclos de vida controlados (p. ej., cotización → pedido → facturado), pero el estado de texto libre sigue siendo aceptable para extensiones simples, así que esto mejora la base sin ser necesario para la adaptación básica. Esta historia depende del perfil de configuración (Historia de Usuario 5).
+
+**Prueba Independiente**: Un desarrollador configura un ciclo de vida cotización→pedido→facturado; el control de estado ofrece solo estados siguientes válidos, las transiciones inválidas se rechazan con una explicación, y el estado es visible de un vistazo en las listas.
+
+**Escenarios de Aceptación**:
+
+1. **Dado** un ciclo de vida configurado, **cuando** el usuario edita el estado de un documento, **entonces** solo se ofrecen los estados alcanzables mediante transiciones permitidas.
+2. **Dado** que se intenta una transición inválida por cualquier vía, **cuando** se envía, **entonces** el sistema la rechaza con una explicación clara.
+3. **Dado** un ciclo de vida configurado, **cuando** el usuario ve listas o detalles de documentos, **entonces** el estado actual es identificable de un vistazo.
+4. **Dado** que no hay ciclo de vida configurado, **cuando** se editan documentos, **entonces** el estado permanece como texto libre igual que en el módulo base sin modificar.
+
+---
+
+### Historia de Usuario 13 - Marco de espacio de trabajo ERP con marca (Prioridad: P1)
+
+Como usuario de negocio, quiero un espacio de trabajo estilo ERP consistente, con una barra superior con marca y una barra lateral de módulos presentes en cada pantalla, para que la aplicación se sienta como un sistema empresarial coherente en lugar de páginas sueltas.
+
+**Por qué esta prioridad**: El marco aporta la marca y la navegación de todas las demás pantallas; construirlo como envoltorio evita tocar cada historia por separado y da al módulo su identidad ERP. Depende del perfil de configuración (Historia de Usuario 5) para el nombre del módulo y la terminología, y reestructura la navegación antes proporcionada por los botones de bienvenida y las pestañas de gestión (Historias de Usuario 3 y 4).
+
+**Prueba Independiente**: En cada pantalla, una barra superior muestra un logotipo derivado del nombre del módulo junto al nombre del módulo, una barra lateral ofrece botones de módulo para Panel, Entidades, Documentos y Buscar con el módulo activo resaltado visualmente, y navegar entre módulos nunca pierde datos.
+
+**Escenarios de Aceptación**:
+
+1. **Dada** cualquier pantalla mostrada, **cuando** el usuario mira la página, **entonces** es visible una barra superior que contiene un logotipo SVG en línea derivado del nombre del módulo y el nombre del módulo configurado.
+2. **Dada** cualquier pantalla mostrada, **cuando** el usuario mira la barra lateral, **entonces** se muestran botones de módulo para Panel, Entidades, Documentos y Buscar usando la terminología configurada.
+3. **Dado** que el usuario está en cualquier pantalla, **cuando** mira la barra lateral, **entonces** el botón del módulo activo está resaltado visualmente.
+4. **Dado** que la ventana gráfica es estrecha, **cuando** se usa la aplicación en una pantalla pequeña, **entonces** la barra lateral se contrae a una columna de iconos manteniéndose utilizable y etiquetada de forma accesible.
+5. **Dada** una configuración que define un color de acento, **cuando** cualquier pantalla carga, **entonces** el marco lo usa consistentemente para resaltados y controles principales; sin valor configurado o con un valor inválido, se usan los valores predeterminados integrados sin errores.
+6. **Dado** que el usuario navega entre módulos mediante la barra lateral, **cuando** inspecciona sus datos después, **entonces** todas las entidades y documentos almacenados permanecen intactos.
 
 ---
 
@@ -281,3 +340,4 @@ Los módulos personalizados construidos sobre esta base DEBEN poder:
 - Los datos siguen persistiéndose en el localStorage del navegador y no se ven afectados por la navegación entre pantallas.
 - La pantalla de búsqueda se centra en encontrar y ver entidades; la edición permanece en la pantalla de gestión.
 - El contenido del usuario introducido por el usuario (nombres, descripciones, notas de documentos) DEBE sanitizarse antes de renderizarse en el DOM para prevenir ataques de inyección de scripts (XSS). El módulo base DEBE escapar HTML y atributos de eventos al mostrar datos de localStorage.
+

@@ -3,7 +3,7 @@
 **Asignatura:** Modelación de Sistemas 2026-2 — Universidad de Concepción  
 **Módulo:** 1. Recursos Humanos y Planilla (`HR / Payroll`)  
 **Fuente:** Diagrama oficial del equipo (`modelo-entidadrelacion.png`) — 14 entidades  
-**Compatibilidad:** ERP Base (`erp_data_model.md`)
+**Compatibilidad:** modelo de datos oficial del ERP base (documentación del curso)
 
 ---
 
@@ -205,7 +205,7 @@ erDiagram
 | | | `nombre_concepto` (varchar) | Sueldo base, horas extras, AFP, salud, impuesto. |
 | | | `tipo_concepto` (varchar) | `haber` o `deduccion`. |
 | 12 | **LIQUIDACIONES** | `liquidacion_id` (int, PK) | Identificador de la liquidación. |
-| | | `periodo_nomina_id` (int, FK) | Corrora a la que pertenece. |
+| | | `periodo_nomina_id` (int, FK) | Corrida de nómina a la que pertenece. |
 | | | `empleado_id` (int, FK) | Trabajador liquidado. |
 | | | `total_haberes` (decimal) | Suma bruta de ingresos. |
 | | | `sueldo_liquido` (decimal) | Neto a transferir. |
@@ -234,3 +234,39 @@ Las 14 entidades se integran con el resto del ERP mediante 3 familias de enlaces
 | `DEPARTAMENTOS.departamento_id` | `cost_centers.department_id` (Finanzas) | Imputación del gasto de personal a presupuestos. |
 | `PERIODOS_NOMINA.periodo_nomina_id` | `journal_entries.source_reference_id` (`source_module='payroll'`) | Asiento contable automático al cerrar la nómina. |
 | `EMPLEADOS.empleado_id` | `sales_orders.employee_id` / `purchase_orders.employee_id` / `quality_inspections.inspector_id` / `customers.assigned_employee_id` | Maestro transversal de personal para todos los módulos. |
+
+---
+
+## 4. Trazabilidad con las Historias de Usuario
+
+| Historia | Entidades principales | Propósito |
+|---|---|---|
+| HU1 — Departamentos | `DEPARTAMENTOS`, `EMPLEADOS` | Estructura organizacional y jefe de área. |
+| HU2 — Cargos | `CARGOS`, `EMPLEADOS`, `CONTRATOS_EMPLEADO` | Catálogo de puestos y niveles de grado. |
+| HU3 — Datos personales | `EMPLEADOS` | Autoservicio de contacto y datos bancarios. |
+| HU4 — Altas y contratos | `EMPLEADOS`, `CONTRATOS_EMPLEADO`, `CARGOS`, `DEPARTAMENTOS` | Ingreso de personal y formalización contractual. |
+| HU5 — Permisos | `TIPOS_PERMISO`, `SOLICITUDES_PERMISO`, `EMPLEADOS` | Solicitud, aprobación y saldo de ausencias. |
+| HU6 — Asistencia | `REGISTROS_ASISTENCIA`, `EMPLEADOS` | Marcaciones diarias y horas trabajadas. |
+| HU7 — Nómina | `PERIODOS_NOMINA`, `CONCEPTOS_NOMINA`, `LIQUIDACIONES`, `DETALLES_LIQUIDACION`, `CONTRATOS_EMPLEADO` | Cálculo y consulta de liquidaciones. |
+| HU8 — RBAC | `EMPLEADOS` (usuario/rol), tablas de auditoría | Control de acceso y confidencialidad. |
+| HU9 — Horas extras | `REGISTROS_ASISTENCIA`, `CONCEPTOS_NOMINA`, `DETALLES_LIQUIDACION` | Validación de horas extras antes de nómina. |
+| HU10 — Beneficios | `BENEFICIOS`, `BENEFICIOS_EMPLEADO`, `EMPLEADOS` | Catálogo e inscripción de beneficios. |
+| HU11 — Evaluaciones | `EVALUACIONES_DESEMPENO`, `EMPLEADOS` | Evaluación periódica de subordinados directos. |
+
+---
+
+## 5. Reglas de Integridad y Validación
+
+- Un `DEPARTAMENTOS.departamento_id` no puede eliminarse si tiene `EMPLEADOS` activos asociados.
+- Un `CARGOS.cargo_id` no puede eliminarse si está referenciado por un `CONTRATOS_EMPLEADO` vigente.
+- `EMPLEADOS.supervisor_id` debe referenciar a otro empleado de la misma empresa y no puede generar ciclos.
+- `CONTRATOS_EMPLEADO.fecha_fin` debe ser igual o posterior a `fecha_inicio`; `salario_base` debe ser mayor que cero.
+- Un empleado no puede tener dos contratos vigentes superpuestos.
+- `REGISTROS_ASISTENCIA` es único por (`empleado_id`, `fecha_laboral`) y `hora_salida` debe ser posterior a `hora_entrada`.
+- `SOLICITUDES_PERMISO.fecha_fin` debe ser igual o posterior a `fecha_inicio`; no se permiten solicitudes superpuestas para el mismo empleado.
+- `LIQUIDACIONES` es única por (`periodo_nomina_id`, `empleado_id`) y requiere un contrato vigente en el período.
+- `DETALLES_LIQUIDACION.monto` se clasifica como haber o deducción según `CONCEPTOS_NOMINA.tipo_concepto`.
+- `BENEFICIOS_EMPLEADO` no permite dos inscripciones activas del mismo empleado en el mismo beneficio.
+- `EVALUACIONES_DESEMPENO.calificacion` debe estar entre 1.00 y 5.00; el evaluador debe ser jefe directo del evaluado.
+- Los registros históricos de nómina, contratos y evaluaciones no se eliminan; se conservan para auditoría.
+- Los cambios de salario, datos bancarios, roles y reapertura de períodos generan un registro de auditoría.
