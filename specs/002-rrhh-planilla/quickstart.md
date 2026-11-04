@@ -2,7 +2,7 @@
 
 ## Estado
 
-El módulo se encuentra en **fase de especificación y planificación**. Los comandos de ejecución estarán disponibles cuando se completen las tareas de implementación de `tasks.md`.
+El módulo está **implementado y demostrable**. La suite automatizada cubre las 11 historias de usuario y el build de producción se genera correctamente.
 
 ## Configuración
 
@@ -10,27 +10,42 @@ El módulo se encuentra en **fase de especificación y planificación**. Los com
 2. Iniciar el servidor de desarrollo con `npm run dev`.
 3. Abrir la URL local que entrega Vite en el navegador.
 4. Ejecutar las pruebas con `npm test`.
+5. Generar el build con `npm run build` y servirlo con `npm run preview`.
 
 ## Datos de demostración
 
-- Los datos semilla se cargan desde `src/data/seed.js` y cubren las 14 entidades del modelo.
-- La aplicación permite restablecer los datos de demo para repetir la presentación.
-- Los usuarios de demo representan los cuatro roles: Administrador de RRHH, Encargado de Nómina, Jefatura/Supervisor y Empleado.
+- Los datos semilla se cargan desde `src/data/seed.js` y cubren las 14 entidades oficiales más las colecciones de soporte `USUARIOS` y `AUDITORIA`.
+- Para reiniciar la demo, borra las claves `hr.*` de `localStorage` desde las herramientas del navegador y recarga la página.
+- La pantalla **Usuarios y roles** permite restablecer los roles de las cuentas demo; los overrides se guardan en `hr.rolesUsuarios`.
 
-## Flujo de demostración sugerido
+## Cuentas de prueba
 
-1. Iniciar sesión como **Administrador de RRHH**.
-2. Crear un departamento y un cargo (HU1 y HU2).
-3. Registrar un colaborador y generar su contrato (HU4).
-4. Iniciar sesión como **Empleado** y actualizar los datos de contacto (HU3).
-5. Enviar una solicitud de permiso (HU5).
-6. Iniciar sesión como **Jefatura** y aprobar o rechazar la solicitud (HU5).
-7. Registrar la asistencia diaria del equipo (HU6).
-8. Validar y aprobar horas extras (HU9).
-9. Iniciar sesión como **Encargado de Nómina**, crear un período y ejecutar la liquidación (HU7).
-10. Verificar la papeleta desde la sesión del empleado (HU7).
-11. Revisar el panel de RRHH con dotación, ausentismo y costo de nómina.
-12. Inscribir a un colaborador en un beneficio (HU10) y registrar una evaluación de desempeño (HU11).
+| Rol | Correo | Clave | Ficha |
+|---|---|---|---|
+| Administrador de RRHH | `admin@empresa.cl` | `admin123` | Sin ficha |
+| Encargado de Nómina | `felipe.vera@empresa.cl` | `nomina123` | Felipe Vera |
+| Jefatura / Supervisor | `ana.torres@empresa.cl` | `super123` | Ana Torres |
+| Jefatura / Supervisor | `carla.rojas@empresa.cl` | `super123` | Carla Rojas |
+| Empleado | `bruno.diaz@empresa.cl` | `empleado123` | Bruno Díaz |
+| Empleado | `elena.munoz@empresa.cl` | `empleado123` | Elena Muñoz |
+
+## Guion de demo de 5 minutos
+
+| Minuto | Rol | Acción | HU |
+|---|---|---|---|
+| 0:00–0:20 | Administrador | Iniciar sesión y mostrar el panel: dotación, ausentismo, costo de nómina y beneficios. | HU8 / T093 |
+| 0:20–0:50 | Administrador | Crear un departamento y un cargo; mostrar validación de nombre/código y bloqueo de borrado con dependencias. | HU1 / HU2 |
+| 0:50–1:20 | Administrador | Crear un colaborador y su contrato; mostrar plantilla editable y rechazo de contrato inválido. | HU4 |
+| 1:20–1:45 | Empleado | Iniciar sesión como Bruno Díaz, actualizar teléfono y proponer un nuevo dato bancario con certificado. Verificar que el banco queda pendiente y que no se admite una segunda solicitud. | HU3 |
+| 1:45–2:05 | Empleado | Enviar una solicitud de vacaciones y mostrar el saldo disponible. | HU5 |
+| 2:05–2:35 | Jefatura | Iniciar sesión como Ana Torres, aprobar la solicitud y verificar la actualización del saldo y del calendario. | HU5 |
+| 2:35–3:00 | Nómina/Jefatura | Registrar asistencia de un colaborador (también como Encargado de Nómina) y aprobar horas extras del equipo directo. | HU6 / HU9 |
+| 3:00–3:30 | Nómina | Crear/ejecutar un período, revisar haberes y deducciones, y descargar una papeleta. | HU7 |
+| 3:30–3:40 | Administrador | Cerrar un período y reabrirlo a `Aprobado` para mostrar que solo administración puede hacerlo. | HU7 |
+| 3:40–4:00 | Administrador | Aprobar la solicitud bancaria pendiente y mostrar el registro de auditoría. | HU3 / HU8 |
+| 4:00–4:20 | Empleado | Ver la papeleta descargada, el estado de sus solicitudes y sus evaluaciones. | HU7 / HU11 |
+| 4:20–4:40 | Administrador | Inscribir a un colaborador en un beneficio y mostrar el costo consolidado. | HU10 |
+| 4:40–5:00 | Jefatura | Registrar una evaluación de desempeño con calificación decimal y cerrar con el panel de indicadores. | HU11 / HU8 |
 
 ## Validaciones que se deben comprobar
 
@@ -44,19 +59,24 @@ El módulo se encuentra en **fase de especificación y planificación**. Los com
 - El sueldo líquido siempre es igual al total de haberes menos las deducciones.
 - Un usuario fuera de rol no puede acceder por navegación ni por URL directa.
 - Un colaborador solo ve sus propias papeletas y evaluaciones.
+- Un cambio bancario no se aplica hasta que RRHH lo aprueba, exige certificado de respaldo y bloquea una segunda solicitud pendiente.
+- Solo un administrador puede reabrir un período cerrado; al hacerlo vuelve a `Aprobado` y queda auditado.
+- El Encargado de Nómina puede registrar y consultar asistencia, pero no validar horas extras.
+- La calificación de una evaluación admite decimales entre 1.00 y 5.00.
 
 ## Roles de prueba
 
 | Rol | Puede ver | No puede ver |
 |---|---|---|
-| Administrador de RRHH | Departamentos, cargos, empleados, contratos, beneficios | Datos médicos detallados |
-| Encargado de Nómina | Períodos, conceptos, liquidaciones | Fichas de personal y datos médicos |
+| Administrador de RRHH | Departamentos, cargos, empleados, contratos, beneficios, usuarios y auditoría | Diagnósticos clínicos |
+| Encargado de Nómina | Períodos, conceptos, liquidaciones y papeletas | Fichas de personal y datos médicos |
 | Jefatura/Supervisor | Permisos, asistencia y evaluaciones de su equipo | Salario base y datos bancarios |
-| Empleado | Sus papeletas, solicitudes y evaluaciones | Registros de otros colaboradores |
+| Empleado | Sus papeletas, solicitudes, beneficios y evaluaciones | Registros de otros colaboradores |
 
 ## Solución de problemas
 
-- **No cargan los datos**: revisar que `localStorage` esté habilitado y restablecer los datos de demo.
+- **No cargan los datos**: revisar que `localStorage` esté habilitado, borrar las claves `hr.*` y recargar.
 - **No aparece una pantalla**: verificar el rol de la sesión y la matriz RBAC.
 - **Las pruebas fallan por fechas**: usar fechas ISO y una fecha de referencia fija en los datos de prueba.
 - **El cálculo de nómina no cuadra**: revisar la clasificación `haber`/`deduccion` de los conceptos y el detalle de la liquidación.
+- **Un usuario no puede entrar**: revisar que tenga un rol asignado en **Usuarios y roles**.

@@ -125,7 +125,20 @@ npm run dev
 
 La aplicación se abre en la URL local que entrega Vite.
 
-> **Estado**: el módulo está en fase de especificación y planificación. Los comandos de ejecución quedarán operativos al completar las tareas de [`specs/002-rrhh-planilla/tasks.md`](specs/002-rrhh-planilla/tasks.md).
+> **Estado**: MVP implementado y demostrable. La aplicación carga datos semilla automáticamente en `localStorage`.
+
+## Cuentas de demostración
+
+| Rol | Correo | Clave |
+|---|---|---|
+| Administrador de RRHH | `admin@empresa.cl` | `admin123` |
+| Encargado de Nómina | `felipe.vera@empresa.cl` | `nomina123` |
+| Jefatura / Supervisor | `ana.torres@empresa.cl` | `super123` |
+| Jefatura / Supervisor | `carla.rojas@empresa.cl` | `super123` |
+| Empleado | `bruno.diaz@empresa.cl` | `empleado123` |
+| Empleado | `elena.munoz@empresa.cl` | `empleado123` |
+
+> Para reiniciar la demo, borra las claves `hr.*` de `localStorage` desde las herramientas del navegador y recarga la página.
 
 ## Pruebas
 
@@ -133,11 +146,20 @@ La aplicación se abre en la URL local que entrega Vite.
 npm test
 ```
 
-La suite considera pruebas unitarias de reglas de negocio y pruebas de integración de los flujos de cada historia de usuario.
+La suite considera 18 archivos y 53 pruebas unitarias/integración de reglas de negocio, RBAC, rendimiento y flujos de cada historia de usuario. Los tests del módulo 001 quedan fuera de esta suite.
+
+## Build de producción
+
+```bash
+npm run build
+npm run preview
+```
+
+El build se genera en `dist/` y puede servirse localmente con Vite Preview.
 
 ## Demostración
 
-El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`](specs/002-rrhh-planilla/quickstart.md). Incluye la creación de estructura organizacional, el alta de un colaborador, la aprobación de permisos, el registro de asistencia, la liquidación de nómina, los beneficios y las evaluaciones.
+El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`](specs/002-rrhh-planilla/quickstart.md). Incluye la creación de estructura organizacional, el alta de un colaborador, la aprobación de permisos y cambios bancarios, el registro de asistencia, la liquidación de nómina, los beneficios y las evaluaciones.
 
 ## Estado del proyecto
 
@@ -147,9 +169,10 @@ El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`
 | Especificación del módulo de RRHH | Completado |
 | Plan de implementación | Completado |
 | Tareas técnicas | Completado |
-| Implementación del MVP | En desarrollo |
-| Pruebas automatizadas | En desarrollo |
-| Demo integrada | Pendiente |
+| Implementación del MVP | Completado |
+| Pruebas automatizadas | Completado (18 archivos / 53 pruebas) |
+| Build de producción | Completado |
+| Demo integrada | Preparada |
 
 ## Documentación
 
