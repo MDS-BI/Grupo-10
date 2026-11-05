@@ -2,20 +2,28 @@
 
 ## Estado
 
-El módulo se encuentra en **fase de especificación y planificación**. Los comandos de ejecución estarán disponibles cuando se completen las tareas de implementación de `tasks.md`.
+El módulo se encuentra **implementado y funcional** como MVP académico. La aplicación incluye los cuatro roles demo, datos semilla, persistencia en `localStorage`, auditoría y 63 pruebas automatizadas.
 
 ## Configuración
 
 1. Instalar las dependencias con `npm install`.
 2. Iniciar el servidor de desarrollo con `npm run dev`.
-3. Abrir la URL local que entrega Vite en el navegador.
+3. Abrir la URL local que entrega Vite en el navegador y elegir un perfil demo.
 4. Ejecutar las pruebas con `npm test`.
+5. Validar el empaquetado con `npm run build`.
 
 ## Datos de demostración
 
 - Los datos semilla se cargan desde `src/data/seed.js` y cubren las 14 entidades del modelo.
 - La aplicación permite restablecer los datos de demo para repetir la presentación.
-- Los usuarios de demo representan los cuatro roles: Administrador de RRHH, Encargado de Nómina, Jefatura/Supervisor y Empleado.
+- Los usuarios de demo representan los cuatro roles y se seleccionan desde la pantalla de ingreso, sin contraseña:
+
+| Usuario demo | Rol | Nombre |
+|---|---|---|
+| `ana.torres` | Administrador de RRHH | Ana Torres |
+| `diego.soto` | Encargado de Nómina | Diego Soto |
+| `gonzalo.paredes` | Jefatura / Supervisor | Gonzalo Paredes |
+| `javiera.nunez` | Empleado | Javiera Núñez |
 
 ## Flujo de demostración sugerido
 

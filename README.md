@@ -65,7 +65,17 @@ Grupo-10/
 │       ├── modelo-entidadrelacion.png
 │       ├── contracts/
 │       └── checklists/
-├── src/                         # Implementación (se crea en la Fase 1 de tasks.md)
+├── src/                         # Implementación funcional del módulo 002
+│   ├── app.js                   # Arranque, login demo y ruteo por hash
+│   ├── styles.css
+│   ├── data/seed.js             # Semilla de las 14 entidades y usuarios demo
+│   └── hr/
+│       ├── storage.js           # Persistencia en localStorage
+│       ├── auth.js              # Sesión simulada y RBAC
+│       ├── rules.js             # Validaciones y reglas de negocio
+│       ├── payroll.js           # Motor de liquidación
+│       ├── audit.js             # Trazabilidad de acciones sensibles
+│       └── components/          # Vistas de cada historia de usuario
 └── tests/
     ├── unit/
     └── integration/
@@ -92,6 +102,19 @@ El diagrama y el diccionario de datos están en [`specs/002-rrhh-planilla/data-m
 | Encargado de Nómina | Períodos, conceptos, liquidaciones y papeletas. |
 | Jefatura / Supervisor | Permisos, asistencia y evaluaciones de sus subordinados directos. |
 | Empleado | Sus propios datos, solicitudes, papeletas y evaluaciones. |
+
+### Usuarios demo
+
+El ingreso no usa contraseña: se selecciona uno de los perfiles disponibles. Los roles y el alcance se aplican de inmediato y los cambios de rol se reflejan en el siguiente inicio de sesión.
+
+| Usuario demo | Rol | Nombre |
+|---|---|---|
+| `ana.torres` | Administrador de RRHH | Ana Torres |
+| `diego.soto` | Encargado de Nómina | Diego Soto |
+| `gonzalo.paredes` | Jefatura / Supervisor | Gonzalo Paredes |
+| `javiera.nunez` | Empleado | Javiera Núñez |
+
+La información se guarda en `localStorage`. El botón **Restablecer demo** vuelve a cargar la semilla original.
 
 ## Metodología
 
@@ -123,9 +146,9 @@ npm install
 npm run dev
 ```
 
-La aplicación se abre en la URL local que entrega Vite.
+La aplicación se abre en la URL local que entrega Vite (por defecto `http://localhost:5173`). Desde la pantalla de ingreso se elige uno de los cuatro perfiles demo.
 
-> **Estado**: el módulo está en fase de especificación y planificación. Los comandos de ejecución quedarán operativos al completar las tareas de [`specs/002-rrhh-planilla/tasks.md`](specs/002-rrhh-planilla/tasks.md).
+> **Estado**: MVP funcional. La aplicación incluye navegación, datos semilla, persistencia local, control de acceso por roles, auditoría y pruebas automatizadas. Las especificaciones del módulo base `001` se conservan sin modificaciones.
 
 ## Pruebas
 
@@ -133,7 +156,14 @@ La aplicación se abre en la URL local que entrega Vite.
 npm test
 ```
 
-La suite considera pruebas unitarias de reglas de negocio y pruebas de integración de los flujos de cada historia de usuario.
+La suite considera pruebas unitarias de reglas de negocio y pruebas de integración de los flujos de cada historia de usuario. Al cierre de esta entrega se ejecutan **63 pruebas** sobre 15 archivos.
+
+```bash
+npm run build
+npm run preview
+```
+
+`npm run build` valida el empaquetado de producción y `npm run preview` sirve el resultado compilado.
 
 ## Demostración
 
@@ -147,9 +177,9 @@ El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`
 | Especificación del módulo de RRHH | Completado |
 | Plan de implementación | Completado |
 | Tareas técnicas | Completado |
-| Implementación del MVP | En desarrollo |
-| Pruebas automatizadas | En desarrollo |
-| Demo integrada | Pendiente |
+| Implementación del MVP | Completado |
+| Pruebas automatizadas | Completado (63 pruebas) |
+| Demo integrada | Completado |
 
 ## Documentación
 

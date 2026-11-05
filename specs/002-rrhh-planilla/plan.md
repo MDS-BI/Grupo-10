@@ -56,6 +56,7 @@ specs/002-rrhh-planilla/
 ### Código fuente (raíz del repositorio)
 
 ```text
+index.html
 src/
 ├── main.js
 ├── app.js
@@ -65,7 +66,11 @@ src/
 ├── hr/
 │   ├── storage.js
 │   ├── auth.js
+│   ├── rules.js
 │   ├── payroll.js
+│   ├── audit.js
+│   ├── search.js
+│   ├── utils.js
 │   └── components/
 │       ├── shell.js
 │       ├── dashboard.js
@@ -76,10 +81,15 @@ src/
 │       ├── permissions.js
 │       ├── attendance.js
 │       ├── payroll-view.js
+│       ├── payslips.js
 │       ├── benefits.js
-│       └── evaluations.js
+│       ├── evaluations.js
+│       ├── profile.js
+│       ├── audit-view.js
+│       └── ui.js
 
 tests/
+├── helpers/hr.js
 ├── unit/
 │   ├── hr-storage.test.js
 │   ├── hr-auth.test.js
@@ -95,10 +105,11 @@ tests/
     ├── rbac.test.js
     ├── overtime.test.js
     ├── benefits.test.js
-    └── evaluations.test.js
+    ├── evaluations.test.js
+    └── hr-dashboard.test.js
 ```
 
-**Decisión de estructura**: el módulo base (`001`) conserva su propia implementación y contrato de almacenamiento. El módulo de RRHH vive en `src/hr/` y reutiliza el marco, la navegación y los estilos del módulo base. Los datos semilla siguen la estructura de las 14 entidades oficiales para que la demo sea reconocible y las pruebas puedan construirse sobre datos realistas.
+**Decisión de estructura**: el módulo base (`001`) conserva su especificación y contrato de almacenamiento sin modificaciones. Como el código fuente del módulo base no está incluido en este repositorio, la entrega del módulo `002` incorpora su propio `index.html`, shell, navegación, estilos y capa de arranque, sin alterar ni reconstruir la implementación de `001`. Las vistas de RRHH viven en `src/hr/`, las reglas de negocio están separadas de la persistencia y los datos semilla siguen la estructura de las 14 entidades oficiales para que la demo sea reconocible y las pruebas se construyan sobre datos realistas. Los tests de `001` se conservan intactos y la configuración de Vitest solo ejecuta la suite de `002`.
 
 ## Problema y Solución Propuesta
 

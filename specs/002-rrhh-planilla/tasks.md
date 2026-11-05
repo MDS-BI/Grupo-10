@@ -2,7 +2,7 @@
 
 **Entrada**: Documentos de diseño desde `/specs/002-rrhh-planilla/`  
 **Prerrequisitos**: [plan.md](plan.md) (obligatorio), [spec.md](spec.md) (obligatorio para las historias de usuario), [research.md](research.md), [data-model.md](data-model.md), [contracts/](contracts/)  
-**Estado**: Planificación — implementación pendiente  
+**Estado**: Implementación MVP completada — 63 pruebas automatizadas, build de producción validado y demo funcional. Las casillas se conservan como trazabilidad del plan; quedan verificaciones manuales de rendimiento (T083) y ensayo de demo (T087).
 **Formato**: `[ID] [P?] [HU] Descripción`
 
 - `[P]` = tarea paralelizable con otras tareas de la misma fase.
