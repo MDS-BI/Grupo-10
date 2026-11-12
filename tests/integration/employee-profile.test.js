@@ -12,6 +12,7 @@ describe('HU3 - ficha y autoservicio del empleado', () => {
     const form = document.querySelector('#employee-form');
     setField(form, 'nombres', 'Paula');
     setField(form, 'apellidos', 'Mena');
+    setField(form, 'rut', '22.345.678-9');
     setField(form, 'correo_electronico', 'paula.mena@empresa.cl');
     setField(form, 'fecha_contratacion', '2026-10-01');
     setField(form, 'estado_laboral', 'Activo');
@@ -26,6 +27,7 @@ describe('HU3 - ficha y autoservicio del empleado', () => {
       .loadCollection('empleados')
       .find((employee) => employee.correo_electronico === 'paula.mena@empresa.cl');
     expect(created).toBeTruthy();
+    expect(created.rut).toBe('22.345.678-9');
     expect(created.departamento_id).toBe(3);
     expect(document.querySelector('#main-content').textContent).toContain('Paula Mena');
   });
@@ -37,6 +39,7 @@ describe('HU3 - ficha y autoservicio del empleado', () => {
     const form = document.querySelector('#employee-form');
     setField(form, 'nombres', 'Duplicado');
     setField(form, 'apellidos', 'Mail');
+    setField(form, 'rut', '23.456.789-0');
     setField(form, 'correo_electronico', 'ana.torres@empresa.cl');
     setField(form, 'fecha_contratacion', '2026-10-01');
     setField(form, 'estado_laboral', 'Activo');
@@ -45,6 +48,24 @@ describe('HU3 - ficha y autoservicio del empleado', () => {
     submit(form);
     expect(storage.loadCollection('empleados')).toHaveLength(before);
     expect(document.querySelector('#employee-feedback').textContent).toContain('correo');
+  });
+
+  test('rechaza RUT duplicados', async () => {
+    const { app, storage } = await bootApp('admin_rrhh');
+    app.navigate('empleados');
+    const before = storage.loadCollection('empleados').length;
+    const form = document.querySelector('#employee-form');
+    setField(form, 'nombres', 'Duplicado');
+    setField(form, 'apellidos', 'Rut');
+    setField(form, 'rut', '12.345.678-9');
+    setField(form, 'correo_electronico', 'duplicado.rut@empresa.cl');
+    setField(form, 'fecha_contratacion', '2026-10-01');
+    setField(form, 'estado_laboral', 'Activo');
+    setField(form, 'departamento_id', '3');
+    setField(form, 'cargo_id', '3');
+    submit(form);
+    expect(storage.loadCollection('empleados')).toHaveLength(before);
+    expect(document.querySelector('#employee-feedback').textContent).toContain('RUT');
   });
 
   test('el empleado actualiza contacto y solicita cambio bancario; RRHH lo aprueba', async () => {
@@ -59,7 +80,7 @@ describe('HU3 - ficha y autoservicio del empleado', () => {
 
     const bankForm = document.querySelector('#bank-form');
     setField(bankForm, 'banco', 'Banco Nuevo');
-    setField(bankForm, 'cuenta_bancaria', '**** 9999');
+    setField(bankForm, 'numero_cuenta', '**** 9999');
     submit(bankForm);
     const request = storage.loadCollection('solicitudesBanco')[0];
     expect(request).toMatchObject({

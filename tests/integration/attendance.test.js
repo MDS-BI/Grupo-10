@@ -22,7 +22,8 @@ describe('HU6 - asistencia y horas extras', () => {
     expect(record).toMatchObject({
       horas_trabajadas: 10,
       horas_extras: 2,
-      estado_aprobacion: 'Pendiente'
+      estado_validacion: 'pendiente',
+      horas_extras_aprobadas: null
     });
     expect(document.querySelector('#attendance-feedback').textContent).toBe('');
   });
@@ -49,7 +50,7 @@ describe('HU6 - asistencia y horas extras', () => {
       .find(
         (record) =>
           record.empleado_id === 10 &&
-          record.estado_aprobacion === 'Pendiente' &&
+          record.estado_validacion === 'pendiente' &&
           Number(record.horas_extras) > 0
       );
     expect(pending).toBeTruthy();
@@ -57,8 +58,10 @@ describe('HU6 - asistencia y horas extras', () => {
     const updated = storage
       .loadCollection('asistencia')
       .find((record) => record.asistencia_id === pending.asistencia_id);
-    expect(updated.estado_aprobacion).toBe('Aprobada');
+    expect(updated.estado_validacion).toBe('aprobado');
+    expect(updated.horas_extras_aprobadas).toBe(pending.horas_extras);
     expect(updated.aprobado_por).toBe(7);
+    expect(updated.fecha_aprobacion).toBeTruthy();
   });
 
   test('no permite registrar asistencia de colaboradores desvinculados', async () => {

@@ -261,11 +261,11 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 - **FR-003**: El sistema DEBE impedir eliminar un departamento con empleados activos y ofrecer reasignarlos.
 - **FR-004**: El sistema DEBE permitir crear, editar y eliminar cargos con nombre y nivel de grado.
 - **FR-005**: El sistema DEBE impedir eliminar un cargo vinculado a contratos vigentes.
-- **FR-006**: El sistema DEBE permitir registrar y editar empleados con identificador único, nombres, apellidos, correo, fecha de contratación, estado laboral, departamento, cargo y supervisor.
+- **FR-006**: El sistema DEBE permitir registrar y editar empleados con RUT único, nombres, apellidos, correo, fecha de contratación, estado laboral, departamento, cargo y supervisor.
 - **FR-007**: El sistema DEBE validar los campos obligatorios del empleado, el formato del correo, la coherencia de fechas y que el supervisor pertenezca a la misma organización.
 - **FR-008**: El sistema DEBE impedir que un empleado sea su propio supervisor o que se generen ciclos de supervisión.
 - **FR-009**: El sistema DEBE permitir al empleado actualizar sus datos de contacto y dirección, reflejando los cambios en su ficha y en la vista de RRHH.
-- **FR-010**: El sistema DEBE exigir validación de RRHH para cambios de datos bancarios y registrar la solicitud con estado y auditoría.
+- **FR-010**: El sistema DEBE exigir validación de RRHH para cambios de datos bancarios, registrando banco, número de cuenta, estado y auditoría en la tabla de apoyo `SOLICITUDES_BANCARIAS`.
 - **FR-011**: El sistema DEBE impedir que el empleado modifique por autoservicio su sueldo base, su cargo o su rol.
 
 #### Contratos
@@ -287,7 +287,7 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 - **FR-023**: El sistema DEBE impedir más de un registro de asistencia por empleado y fecha.
 - **FR-024**: El sistema DEBE rechazar registros con hora de salida anterior o igual a la hora de entrada y registros de empleados desvinculados.
 - **FR-025**: El sistema DEBE entregar un resumen de horas trabajadas, ausencias y ausentismo por área y período.
-- **FR-026**: El sistema DEBE permitir a la jefatura validar asistencia y horas extras solo de sus subordinados directos.
+- **FR-026**: El sistema DEBE permitir a la jefatura validar asistencia y horas extras solo de sus subordinados directos, actualizando `estado_validacion` y consolidando `horas_extras_aprobadas`.
 - **FR-027**: El sistema DEBE ocultar a la jefatura los datos salariales, bancarios y médicos de los colaboradores.
 
 #### Nómina
@@ -321,7 +321,7 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 - **FR-048**: El sistema DEBE registrar auditoría de cambios de salario, datos bancarios, roles y reapertura de períodos.
 - **FR-049**: El sistema DEBE sanitizar los datos ingresados por el usuario antes de renderizarlos para prevenir XSS.
 - **FR-050**: El sistema DEBE registrar tipos y días de ausencia médica sin almacenar diagnósticos clínicos.
-- **FR-051**: El sistema DEBE persistir las 14 entidades en `localStorage` y cargar datos semilla para la demo.
+- **FR-051**: El sistema DEBE persistir las 14 entidades oficiales y las tablas de apoyo (`SOLICITUDES_BANCARIAS`, auditoría, sesión) en `localStorage` y cargar datos semilla para la demo.
 - **FR-052**: El sistema DEBE ofrecer búsqueda y filtros por nombre, código, área, cargo, estado y período.
 - **FR-053**: El sistema DEBE mostrar indicadores de dotación activa, distribución por departamento, ausentismo y costo de nómina.
 - **FR-054**: El sistema DEBE mantener la integridad referencial al crear, editar y eliminar registros, incluyendo la eliminación en cascada cuando corresponda.
@@ -332,11 +332,11 @@ Como jefatura, quiero registrar evaluaciones periódicas de desempeño de mis co
 
 - **DEPARTAMENTOS**: área organizacional con nombre, empresa, jefe y dotación mínima; agrupa empleados.
 - **CARGOS**: puesto de trabajo con nombre y nivel de grado; se asigna a empleados y contratos.
-- **EMPLEADOS**: ficha laboral con identificación, contacto, fecha de contratación, estado, departamento, cargo y supervisor.
+- **EMPLEADOS**: ficha laboral con RUT único, contacto, datos bancarios, fecha de contratación, estado, departamento, cargo y supervisor.
 - **CONTRATOS_EMPLEADO**: vínculo contractual con tipo, vigencia, salario base y moneda.
 - **BENEFICIOS**: catálogo de beneficios con proveedor, costo y estado (activo/inactivo).
 - **BENEFICIOS_EMPLEADO**: inscripción de un empleado en un beneficio, con fecha de inscripción, estado y fecha de término.
-- **REGISTROS_ASISTENCIA**: marcación diaria con entrada, salida y horas trabajadas.
+- **REGISTROS_ASISTENCIA**: marcación diaria con entrada, salida, horas trabajadas, horas extras, estado de validación y horas extras aprobadas.
 - **TIPOS_PERMISO**: catálogo de ausencias con marca de remuneración y derecho anual de días.
 - **SOLICITUDES_PERMISO**: solicitud de ausencia con fechas, días solicitados, estado, aprobador y comentario.
 - **PERIODOS_NOMINA**: período mensual de cálculo con fechas y estado.

@@ -9,7 +9,7 @@
 
 ## 1. Diagrama Entidad-Relación (Mermaid ERD)
 
-Este código reproduce el diagrama oficial con las mismas 14 entidades, nombres de atributos y relaciones, y añade un conjunto mínimo de campos marcados con `†` para soportar las reglas de saldo de permisos y vigencia de beneficios (HU5 y HU10). Las 14 entidades se mantienen.
+Este código reproduce el diagrama oficial con las mismas 14 entidades, nombres de atributos y relaciones, y añade un conjunto mínimo de campos marcados con `†` para soportar las reglas de saldo de permisos, vigencia de beneficios, RUT único, datos bancarios y validación de horas extras (HU3, HU5, HU9 y HU10). Las 14 entidades se mantienen y se agrega la tabla de apoyo `SOLICITUDES_BANCARIAS`.
 
 > **Para regenerar la imagen:** pega este bloque en [mermaid.live](https://mermaid.live) y descarga en PNG/SVG.
 
@@ -49,14 +49,19 @@ erDiagram
 
     EMPLEADOS {
         int empleado_id PK
+        varchar rut "unique"
         int departamento_id FK
         int cargo_id FK
         int supervisor_id FK "self"
         varchar nombres
         varchar apellidos
         varchar correo_electronico
+        varchar telefono "nullable"
+        varchar direccion "nullable"
         date fecha_contratacion
         varchar estado_laboral
+        varchar banco "nullable"
+        varchar numero_cuenta "nullable"
     }
 
     CONTRATOS_EMPLEADO {
@@ -93,6 +98,11 @@ erDiagram
         datetime hora_entrada
         datetime hora_salida
         decimal horas_trabajadas
+        decimal horas_extras "†"
+        varchar estado_validacion "pendiente, aprobado, rechazado †"
+        decimal horas_extras_aprobadas "nullable †"
+        int aprobado_por FK "nullable †"
+        date fecha_aprobacion "nullable †"
     }
 
     TIPOS_PERMISO {
@@ -154,11 +164,25 @@ erDiagram
         decimal calificacion
         text comentarios
     }
+
+    EMPLEADOS ||--o{ SOLICITUDES_BANCARIAS : "solicita cambio"
+
+    SOLICITUDES_BANCARIAS {
+        int solicitud_banco_id PK
+        int empleado_id FK
+        varchar banco
+        varchar numero_cuenta
+        varchar estado "pendiente, aprobada, rechazada †"
+        date fecha_solicitud "†"
+        int revisado_por FK "nullable †"
+    }
 ```
+
+> **Tabla de apoyo:** `SOLICITUDES_BANCARIAS` no forma parte de las 14 entidades oficiales; registra el historial de cambios bancarios que requieren validación de RRHH.
 
 ---
 
-## 2. Diccionario de Datos (14 entidades oficiales)
+## 2. Diccionario de Datos (14 entidades oficiales + tablas de apoyo)
 
 | # | Entidad | Campo (tipo) | Descripción |
 |---|---|---|---|
@@ -171,13 +195,18 @@ erDiagram
 | | | `nombre_cargo` (varchar) | Denominación del cargo. |
 | | | `nivel_grado` (varchar) | Banda jerárquica/salarial (Junior, Senior, Jefatura). |
 | 3 | **EMPLEADOS** | `empleado_id` (int, PK) | Identificador del colaborador. |
+| | | `rut` (varchar, unique) | Identificador legal único del colaborador. |
 | | | `departamento_id` (int, FK) | Área a la que pertenece. |
 | | | `cargo_id` (int, FK) | Cargo que ocupa. |
 | | | `supervisor_id` (int, FK self) | Supervisor directo (auto-referencia). |
 | | | `nombres` / `apellidos` (varchar) | Nombre completo. |
 | | | `correo_electronico` (varchar) | Correo institucional. |
+| | | `telefono` (varchar, nullable) | Teléfono de contacto. |
+| | | `direccion` (varchar, nullable) | Dirección particular. |
 | | | `fecha_contratacion` (date) | Fecha de ingreso. |
 | | | `estado_laboral` (varchar) | Activo / con licencia / desvinculado. |
+| | | `banco` (varchar, nullable) | Banco donde recibe el pago. |
+| | | `numero_cuenta` (varchar, nullable) | Cuenta bancaria para el depósito del sueldo. |
 | 4 | **CONTRATOS_EMPLEADO** | `contrato_id` (int, PK) | Identificador del contrato. |
 | | | `empleado_id` (int, FK) | Trabajador contratado. |
 | | | `tipo_contrato` (varchar) | Indefinido / plazo fijo / honorarios. |
@@ -200,6 +229,11 @@ erDiagram
 | | | `fecha_laboral` (date) | Día de la jornada. |
 | | | `hora_entrada` / `hora_salida` (datetime) | Marcas de ingreso y salida. |
 | | | `horas_trabajadas` (decimal) | Horas efectivas (base para horas extras). |
+| | | `horas_extras` (decimal) † | Horas extras calculadas a partir de la jornada. |
+| | | `estado_validacion` (varchar) † | `pendiente`, `aprobado` o `rechazado` por la jefatura directa. |
+| | | `horas_extras_aprobadas` (decimal, nullable) † | Horas extras autorizadas; solo se consolidan en nómina si el estado es `aprobado`. |
+| | | `aprobado_por` (int, FK, nullable) † | Jefatura que validó la asistencia y las horas extras. |
+| | | `fecha_aprobacion` (date, nullable) † | Fecha de validación de la asistencia. |
 | 8 | **TIPOS_PERMISO** | `tipo_permiso_id` (int, PK) | Identificador del tipo de ausencia. |
 | | | `nombre_tipo_permiso` (varchar) | Vacaciones, licencia médica, permiso administrativo. |
 | | | `es_remunerado` (boolean) | Si el día se paga o se descuenta. |
@@ -237,6 +271,18 @@ erDiagram
 | | | `fecha_evaluacion` (date) | Fecha de la evaluación. |
 | | | `calificacion` (decimal) | Puntaje objetivo (1.00 – 5.00). |
 | | | `comentarios` (text) | Retroalimentación. |
+
+### Tabla de apoyo: SOLICITUDES_BANCARIAS
+
+| Entidad | Campo (tipo) | Descripción |
+|---|---|---|
+| **SOLICITUDES_BANCARIAS** | `solicitud_banco_id` (int, PK) | Identificador de la solicitud de cambio bancario. |
+| | `empleado_id` (int, FK) | Colaborador que solicita el cambio. |
+| | `banco` (varchar) | Banco propuesto. |
+| | `numero_cuenta` (varchar) | Cuenta bancaria propuesta. |
+| | `estado` (varchar) | `pendiente`, `aprobada` o `rechazada`. |
+| | `fecha_solicitud` (date) | Fecha de envío de la solicitud. |
+| | `revisado_por` (int, FK, nullable) | Usuario de RRHH que resolvió la solicitud. |
 
 ---
 
@@ -277,10 +323,12 @@ Las 14 entidades se integran con el resto del ERP mediante 3 familias de enlaces
 
 - Un `DEPARTAMENTOS.departamento_id` no puede eliminarse si tiene `EMPLEADOS` activos asociados.
 - Un `CARGOS.cargo_id` no puede eliminarse si está referenciado por un `CONTRATOS_EMPLEADO` vigente.
-- `EMPLEADOS.supervisor_id` debe referenciar a otro empleado de la misma empresa y no puede generar ciclos.
+- `EMPLEADOS.rut` es obligatorio y único; `EMPLEADOS.supervisor_id` debe referenciar a otro empleado de la misma empresa y no puede generar ciclos.
+- `SOLICITUDES_BANCARIAS` registra cada cambio de banco/cuenta con estado `pendiente`, `aprobada` o `rechazada`; no puede existir más de una solicitud pendiente por empleado.
 - `CONTRATOS_EMPLEADO.fecha_fin` debe ser igual o posterior a `fecha_inicio`; `salario_base` debe ser mayor que cero.
 - Un empleado no puede tener dos contratos vigentes superpuestos.
 - `REGISTROS_ASISTENCIA` es único por (`empleado_id`, `fecha_laboral`) y `hora_salida` debe ser posterior a `hora_entrada`.
+- `REGISTROS_ASISTENCIA.estado_validacion` pasa de `pendiente` a `aprobado`/`rechazado` solo por la jefatura directa; `horas_extras_aprobadas` solo se consolida en nómina cuando el estado es `aprobado` y no puede aprobarse dos veces.
 - `SOLICITUDES_PERMISO.fecha_fin` debe ser igual o posterior a `fecha_inicio`; no se permiten solicitudes superpuestas para el mismo empleado.
 - `SOLICITUDES_PERMISO.dias_solicitados` no puede superar el saldo derivado de `TIPOS_PERMISO.dias_anuales` menos los días ya aprobados en el año. Si `dias_anuales` es nulo, la solicitud no consume saldo.
 - `DEPARTAMENTOS.dotacion_minima` es configurable (por defecto 1) y no puede ser superada por ausencias aprobadas simultáneas del área.

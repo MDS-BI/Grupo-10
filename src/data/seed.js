@@ -28,13 +28,14 @@ const employees = [
     supervisor_id: null,
     nombres: 'Ana',
     apellidos: 'Torres',
+    rut: '12.345.678-9',
     correo_electronico: 'ana.torres@empresa.cl',
     fecha_contratacion: '2023-01-09',
     estado_laboral: 'Activo',
     telefono: '+56 9 1111 1111',
     direccion: 'Av. Central 100, Concepcion',
     banco: 'Banco Estado',
-    cuenta_bancaria: '**** 1234'
+    numero_cuenta: '**** 1234'
   },
   {
     empleado_id: 2,
@@ -43,13 +44,14 @@ const employees = [
     supervisor_id: null,
     nombres: 'Bruno',
     apellidos: 'Diaz',
+    rut: '13.456.789-0',
     correo_electronico: 'bruno.diaz@empresa.cl',
     fecha_contratacion: '2023-03-15',
     estado_laboral: 'Activo',
     telefono: '+56 9 2222 2222',
     direccion: 'Los Aromos 45, Concepcion',
     banco: 'Banco de Chile',
-    cuenta_bancaria: '**** 5678'
+    numero_cuenta: '**** 5678'
   },
   {
     empleado_id: 3,
@@ -58,13 +60,14 @@ const employees = [
     supervisor_id: 7,
     nombres: 'Carla',
     apellidos: 'Rojas',
+    rut: '14.567.890-1',
     correo_electronico: 'carla.rojas@empresa.cl',
     fecha_contratacion: '2024-02-01',
     estado_laboral: 'Activo',
     telefono: '+56 9 3333 3333',
     direccion: 'Calle Freire 220, Concepcion',
     banco: 'Banco Santander',
-    cuenta_bancaria: '**** 9012'
+    numero_cuenta: '**** 9012'
   },
   {
     empleado_id: 4,
@@ -73,13 +76,14 @@ const employees = [
     supervisor_id: 1,
     nombres: 'Diego',
     apellidos: 'Soto',
+    rut: '15.678.901-2',
     correo_electronico: 'diego.soto@empresa.cl',
     fecha_contratacion: '2023-06-12',
     estado_laboral: 'Activo',
     telefono: '+56 9 4444 4444',
     direccion: 'O\'Higgins 810, Concepcion',
     banco: 'Banco Estado',
-    cuenta_bancaria: '**** 3456'
+    numero_cuenta: '**** 3456'
   },
   {
     empleado_id: 5,
@@ -88,13 +92,14 @@ const employees = [
     supervisor_id: null,
     nombres: 'Elena',
     apellidos: 'Munoz',
+    rut: '16.789.012-3',
     correo_electronico: 'elena.munoz@empresa.cl',
     fecha_contratacion: '2022-05-02',
     estado_laboral: 'Activo',
     telefono: '+56 9 5555 5555',
     direccion: 'Av. Alemana 1520, Concepcion',
     banco: 'Banco de Chile',
-    cuenta_bancaria: '**** 7890'
+    numero_cuenta: '**** 7890'
   },
   {
     empleado_id: 6,
@@ -103,13 +108,14 @@ const employees = [
     supervisor_id: 2,
     nombres: 'Felipe',
     apellidos: 'Vera',
+    rut: '17.890.123-4',
     correo_electronico: 'felipe.vera@empresa.cl',
     fecha_contratacion: '2024-08-19',
     estado_laboral: 'Activo',
     telefono: '+56 9 6666 6666',
     direccion: 'Barros Arana 55, Concepcion',
     banco: 'Banco BCI',
-    cuenta_bancaria: '**** 2345'
+    numero_cuenta: '**** 2345'
   },
   {
     empleado_id: 7,
@@ -118,13 +124,14 @@ const employees = [
     supervisor_id: 5,
     nombres: 'Gonzalo',
     apellidos: 'Paredes',
+    rut: '18.901.234-5',
     correo_electronico: 'gonzalo.paredes@empresa.cl',
     fecha_contratacion: '2023-02-20',
     estado_laboral: 'Activo',
     telefono: '+56 9 7777 7777',
     direccion: 'Paicavi 340, Concepcion',
     banco: 'Banco Santander',
-    cuenta_bancaria: '**** 6789'
+    numero_cuenta: '**** 6789'
   },
   {
     empleado_id: 8,
@@ -133,13 +140,14 @@ const employees = [
     supervisor_id: 1,
     nombres: 'Hilda',
     apellidos: 'Castro',
+    rut: '19.012.345-6',
     correo_electronico: 'hilda.castro@empresa.cl',
     fecha_contratacion: '2024-04-08',
     estado_laboral: 'Activo',
     telefono: '+56 9 8888 8888',
     direccion: 'San Martin 900, Concepcion',
     banco: 'Banco Estado',
-    cuenta_bancaria: '**** 1122'
+    numero_cuenta: '**** 1122'
   },
   {
     empleado_id: 9,
@@ -148,13 +156,14 @@ const employees = [
     supervisor_id: 4,
     nombres: 'Ivan',
     apellidos: 'Lagos',
+    rut: '20.123.456-7',
     correo_electronico: 'ivan.lagos@empresa.cl',
     fecha_contratacion: '2025-01-13',
     estado_laboral: 'Activo',
     telefono: '+56 9 9999 9999',
     direccion: 'Colo Colo 125, Concepcion',
     banco: 'Banco Itau',
-    cuenta_bancaria: '**** 3344'
+    numero_cuenta: '**** 3344'
   },
   {
     empleado_id: 10,
@@ -163,13 +172,14 @@ const employees = [
     supervisor_id: 7,
     nombres: 'Javiera',
     apellidos: 'Nunez',
+    rut: '21.234.567-8',
     correo_electronico: 'javiera.nunez@empresa.cl',
     fecha_contratacion: '2025-03-03',
     estado_laboral: 'Activo',
     telefono: '+56 9 1010 1010',
     direccion: 'Rengo 77, Concepcion',
     banco: 'Banco Falabella',
-    cuenta_bancaria: '**** 5566'
+    numero_cuenta: '**** 5566'
   }
 ];
 
@@ -299,6 +309,8 @@ function buildAttendance() {
       const start = 8 * 60 + 30;
       const [exitHour, exitMinute] = exit.split(':').map(Number);
       const hours = Math.round(((exitHour * 60 + exitMinute - start) / 60) * 100) / 100;
+      const overtime = Math.max(0, Math.round((hours - 8) * 100) / 100);
+      const pending = employee.departamento_id === 4;
       records.push({
         asistencia_id: id,
         empleado_id: employee.empleado_id,
@@ -306,9 +318,11 @@ function buildAttendance() {
         hora_entrada: `${date}T${entry}`,
         hora_salida: `${date}T${exit}`,
         horas_trabajadas: hours,
-        horas_extras: Math.max(0, Math.round((hours - 8) * 100) / 100),
-        estado_aprobacion: employee.departamento_id === 4 ? 'Pendiente' : 'Aprobada',
-        aprobado_por: employee.departamento_id === 4 ? null : 1
+        horas_extras: overtime,
+        estado_validacion: pending ? 'pendiente' : 'aprobado',
+        horas_extras_aprobadas: pending ? null : overtime,
+        aprobado_por: pending ? null : 1,
+        fecha_aprobacion: pending ? null : date
       });
       id += 1;
     });

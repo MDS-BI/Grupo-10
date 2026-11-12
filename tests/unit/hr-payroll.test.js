@@ -94,7 +94,7 @@ describe('motor de nomina', () => {
       telefono: '',
       direccion: '',
       banco: '',
-      cuenta_bancaria: ''
+      numero_cuenta: ''
     });
     const result = runPayroll(2, actor);
     expect(result.created).toBe(10);

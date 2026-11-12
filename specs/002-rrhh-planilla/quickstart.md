@@ -46,8 +46,10 @@ El módulo se encuentra **implementado y funcional** como MVP académico. La apl
 - No se puede eliminar un departamento con empleados activos ni un cargo con contratos vigentes.
 - Un contrato con fecha de término anterior al inicio o salario menor o igual a cero se rechaza.
 - Un empleado no puede ser su propio supervisor ni generar ciclos.
+- Un RUT o correo duplicado se rechaza al crear o editar un colaborador.
 - Una solicitud de permiso con fechas inválidas, superpuesta o sin saldo se rechaza.
 - Un registro de asistencia duplicado o con salida anterior a la entrada se rechaza.
+- Las horas extras solo se consolidan en nómina cuando `estado_validacion` es `aprobado` y no pueden aprobarse dos veces.
 - La nómina no permite duplicados por empleado/período ni empleados sin contrato vigente.
 - El sueldo líquido siempre es igual al total de haberes menos las deducciones.
 - Un usuario fuera de rol no puede acceder por navegación ni por URL directa.

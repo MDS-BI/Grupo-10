@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Una empresa busca diseñar una base de datos relacional para gestionar la información de su personal y la administración de recursos humanos. Por cada empleado se registra un identificador único, nombres, correo electrónico, fecha de contratación y estado laboral, además de asociarlo a un departamento específico, un cargo y, en caso de corresponder, a un supervisor directo dentro de la misma organización. A su vez, el sistema permite registrar los contratos laborales vigentes, detallando el tipo de contrato, fechas de inicio y término, salario base y la forma de pago en que se pacta la remuneración.
+Una empresa busca diseñar una base de datos relacional para gestionar la información de su personal y la administración de recursos humanos. Por cada empleado se registra un RUT único, nombres, correo electrónico, fecha de contratación y estado laboral, además de asociarlo a un departamento específico, un cargo y, en caso de corresponder, a un supervisor directo dentro de la misma organización. A su vez, el sistema permite registrar los contratos laborales vigentes, detallando el tipo de contrato, fechas de inicio y término, salario base y la forma de pago en que se pacta la remuneración.
 
 Por otra parte, el sistema administra las actividades y beneficios vinculados a cada trabajador durante su permanencia en la empresa. Se gestionan las solicitudes y tipos de permisos laborales con sus respectivas aprobaciones, el registro diario de asistencia con horas trabajadas, y las evaluaciones periódicas de desempeño asignadas a evaluadores específicos. Finalmente, el módulo controla la ejecución de nóminas de pago, desglosando los sueldos brutos y netos mediante conceptos de ingresos y deducciones, así como la inscripción de los empleados en los distintos planes de beneficios ofrecidos en la empresa.
 
@@ -17,7 +17,7 @@ Prototipo web interactivo del módulo de **Recursos Humanos y Planilla**, constr
 ## Funcionalidades principales
 
 - Gestión de departamentos y catálogo de cargos con niveles de grado.
-- Fichas de empleados con datos de contacto, departamento, cargo y supervisor.
+- Fichas de empleados con RUT único, datos de contacto y bancarios, departamento, cargo y supervisor.
 - Contratos laborales con tipo, vigencia, salario base y moneda.
 - Solicitudes de permiso con flujo de aprobación, saldo y dotación mínima.
 - Registro diario de asistencia y cálculo de horas trabajadas.
@@ -83,7 +83,7 @@ Grupo-10/
 
 ## Modelo de datos
 
-El módulo trabaja con 14 entidades oficiales:
+El módulo trabaja con 14 entidades oficiales y tablas de apoyo (`SOLICITUDES_BANCARIAS`, auditoría y sesión):
 
 | Área | Entidades |
 |---|---|

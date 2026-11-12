@@ -38,7 +38,7 @@ describe('HU4 - contratos', () => {
       telefono: '',
       direccion: '',
       banco: '',
-      cuenta_bancaria: ''
+      numero_cuenta: ''
     });
     app.navigate('contratos');
     const form = document.querySelector('#contract-form');

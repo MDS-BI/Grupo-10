@@ -48,7 +48,9 @@ export function render(container, ctx) {
       ?.slice(0, 7) || todayISO().slice(0, 7);
 
   const pendingOvertime = scopeRecords.filter(
-    (record) => record.estado_aprobacion === 'Pendiente' && Number(record.horas_extras) > 0
+    (record) =>
+      (record.estado_validacion === 'pendiente' || record.estado_aprobacion === 'Pendiente') &&
+      Number(record.horas_extras) > 0
   );
 
   const summary = departments
@@ -147,7 +149,7 @@ export function render(container, ctx) {
                       label: 'Horas extras',
                       render: (record) => `<strong>${escapeHtml(record.horas_extras)}</strong>`
                     },
-                    { label: 'Estado', render: (record) => statusBadge(record.estado_aprobacion) },
+                    { label: 'Estado', render: (record) => statusBadge(record.estado_validacion || record.estado_aprobacion) },
                     {
                       label: 'Acciones',
                       render: (record) =>
@@ -192,7 +194,7 @@ export function render(container, ctx) {
               },
               { label: 'Horas', render: (record) => escapeHtml(record.horas_trabajadas) },
               { label: 'Extras', render: (record) => escapeHtml(record.horas_extras || 0) },
-              { label: 'Estado', render: (record) => statusBadge(record.estado_aprobacion) }
+              { label: 'Estado', render: (record) => statusBadge(record.estado_validacion || record.estado_aprobacion) }
             ],
             scopeRecords.slice(0, 200),
             'Sin registros de asistencia.',
@@ -226,15 +228,19 @@ export function render(container, ctx) {
     event.preventDefault();
     const values = formValues(form);
     const hours = hoursBetween(values.hora_entrada, values.hora_salida);
+    const overtime = Math.max(0, Math.round((hours - 8) * 100) / 100);
+    const pending = overtime > 0;
     const payload = {
       empleado_id: Number(values.empleado_id),
       fecha_laboral: values.fecha_laboral,
       hora_entrada: `${values.fecha_laboral}T${values.hora_entrada}`,
       hora_salida: `${values.fecha_laboral}T${values.hora_salida}`,
       horas_trabajadas: hours,
-      horas_extras: Math.max(0, Math.round((hours - 8) * 100) / 100),
-      estado_aprobacion: hours > 8 ? 'Pendiente' : 'Aprobada',
-      aprobado_por: hours > 8 ? null : user.empleado_id
+      horas_extras: overtime,
+      estado_validacion: pending ? 'pendiente' : 'aprobado',
+      horas_extras_aprobadas: pending ? null : overtime,
+      aprobado_por: pending ? null : user.empleado_id,
+      fecha_aprobacion: pending ? null : values.fecha_laboral
     };
     const validation = validateAttendance(payload, { records, employees });
     if (!validation.valid) {
@@ -265,13 +271,19 @@ export function render(container, ctx) {
       const record = records.find(
         (item) => String(item.asistencia_id) === String(button.dataset.approveOvertime)
       );
-      if (!record || record.estado_aprobacion === 'Aprobada') {
+      if (
+        !record ||
+        record.estado_validacion === 'aprobado' ||
+        record.estado_aprobacion === 'Aprobada'
+      ) {
         showFeedback(feedbackSlot, 'El registro ya fue aprobado o no existe.');
         return;
       }
       updateItem('asistencia', record.asistencia_id, {
-        estado_aprobacion: 'Aprobada',
-        aprobado_por: user.empleado_id
+        estado_validacion: 'aprobado',
+        horas_extras_aprobadas: Number(record.horas_extras || 0),
+        aprobado_por: user.empleado_id,
+        fecha_aprobacion: todayISO()
       });
       audit(
         'Aprobacion de horas extras',

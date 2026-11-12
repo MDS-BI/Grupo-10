@@ -43,12 +43,14 @@ describe('HU9 - horas extras aprobadas', () => {
 
   test('al aprobar las horas pendientes se incorporan en una nueva ejecucion', () => {
     const pending = loadCollection('asistencia').filter(
-      (record) => record.empleado_id === 10 && record.estado_aprobacion === 'Pendiente'
+      (record) => record.empleado_id === 10 && record.estado_validacion === 'pendiente'
     );
     pending.forEach((record) =>
       updateItem('asistencia', record.asistencia_id, {
-        estado_aprobacion: 'Aprobada',
-        aprobado_por: 7
+        estado_validacion: 'aprobado',
+        horas_extras_aprobadas: record.horas_extras,
+        aprobado_por: 7,
+        fecha_aprobacion: record.fecha_laboral
       })
     );
     expect(approvedOvertimeHours(10, '2026-10-01', '2026-10-31')).toBeGreaterThan(0);

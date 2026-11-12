@@ -140,6 +140,17 @@ export function validateEmployee(data, options = {}) {
 
   if (!String(data.nombres || '').trim()) errors.nombres = 'Los nombres son obligatorios.';
   if (!String(data.apellidos || '').trim()) errors.apellidos = 'Los apellidos son obligatorios.';
+  const rut = String(data.rut || '').trim();
+  if (!rut) {
+    errors.rut = 'El RUT es obligatorio.';
+  } else {
+    const duplicate = employees.some(
+      (employee) =>
+        String(employee.empleado_id) !== String(editingId) &&
+        String(employee.rut || '').trim().toLowerCase() === rut.toLowerCase()
+    );
+    if (duplicate) errors.rut = 'Ya existe un empleado con ese RUT.';
+  }
   if (!isValidEmail(data.correo_electronico)) {
     errors.correo_electronico = 'El correo electronico no es valido.';
   } else {
@@ -441,7 +452,7 @@ export function validateBankRequest(data, options = {}) {
   const requests = options.requests || loadCollection('solicitudesBanco');
   const errors = {};
   if (!String(data.banco || '').trim()) errors.banco = 'El banco es obligatorio.';
-  if (!String(data.cuenta_bancaria || '').trim()) errors.cuenta_bancaria = 'La cuenta bancaria es obligatoria.';
+  if (!String(data.numero_cuenta || '').trim()) errors.numero_cuenta = 'La cuenta bancaria es obligatoria.';
   const pending = requests.some(
     (request) =>
       String(request.empleado_id) === String(data.empleado_id) && request.estado === 'Pendiente'

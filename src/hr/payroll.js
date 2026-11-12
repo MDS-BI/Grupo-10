@@ -36,11 +36,15 @@ export function approvedOvertimeHours(employeeId, start, end, records = loadColl
       .filter(
         (record) =>
           String(record.empleado_id) === String(employeeId) &&
-          record.estado_aprobacion === 'Aprobada' &&
+          (record.estado_validacion === 'aprobado' || record.estado_aprobacion === 'Aprobada') &&
           record.fecha_laboral >= start &&
           record.fecha_laboral <= end
       )
-      .reduce((total, record) => total + Number(record.horas_extras || 0), 0)
+      .reduce(
+        (total, record) =>
+          total + Number(record.horas_extras_aprobadas ?? record.horas_extras ?? 0),
+        0
+      )
   );
 }
 

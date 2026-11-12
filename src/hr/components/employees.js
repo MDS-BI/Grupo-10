@@ -62,7 +62,7 @@ export function render(container, ctx) {
     ${card(
       'Buscar y filtrar',
       `<form class="filter-bar" id="employee-filter" autocomplete="off">
-         ${field({ label: 'Buscar', name: 'q', placeholder: 'Nombre, apellido o correo' })}
+         ${field({ label: 'Buscar', name: 'q', placeholder: 'Nombre, RUT, apellido o correo' })}
          ${selectField({
            label: 'Departamento',
            name: 'departamento',
@@ -98,7 +98,7 @@ export function render(container, ctx) {
             {
               label: 'Colaborador',
               render: (row) =>
-                `<strong>${escapeHtml(row.nombres)} ${escapeHtml(row.apellidos)}</strong><br /><small class="muted">${escapeHtml(row.correo_electronico)}</small>`
+                `<strong>${escapeHtml(row.nombres)} ${escapeHtml(row.apellidos)}</strong><br /><small class="muted">${escapeHtml(row.rut || 'Sin RUT')} · ${escapeHtml(row.correo_electronico)}</small>`
             },
             {
               label: 'Departamento',
@@ -144,7 +144,7 @@ export function render(container, ctx) {
           rows,
           'No hay colaboradores que coincidan con el filtro.',
           (row) =>
-            `data-search="${escapeHtml(`${row.nombres} ${row.apellidos} ${row.correo_electronico}`.toLowerCase())}" data-dept="${row.departamento_id}" data-cargo="${row.cargo_id}" data-state="${escapeHtml(row.estado_laboral)}"`
+            `data-search="${escapeHtml(`${row.nombres} ${row.apellidos} ${row.rut || ''} ${row.correo_electronico}`.toLowerCase())}" data-dept="${row.departamento_id}" data-cargo="${row.cargo_id}" data-state="${escapeHtml(row.estado_laboral)}"`
         ),
         { actions: `<span class="count-pill">${rows.length}</span>` }
       )}
@@ -157,6 +157,7 @@ export function render(container, ctx) {
                   <input type="hidden" name="empleado_id" value="" />
                   ${field({ label: 'Nombres', name: 'nombres', required: true })}
                   ${field({ label: 'Apellidos', name: 'apellidos', required: true })}
+                  ${field({ label: 'RUT', name: 'rut', placeholder: '12.345.678-9', required: true })}
                   ${field({ label: 'Correo electronico', name: 'correo_electronico', type: 'email', required: true })}
                   ${field({ label: 'Fecha de contratacion', name: 'fecha_contratacion', type: 'date', required: true })}
                   ${selectField({
@@ -226,7 +227,7 @@ export function render(container, ctx) {
                     { label: 'Banco', render: (request) => escapeHtml(request.banco) },
                     {
                       label: 'Cuenta',
-                      render: (request) => `<span class="confidential">${escapeHtml(request.cuenta_bancaria)}</span>`
+                      render: (request) => `<span class="confidential">${escapeHtml(request.numero_cuenta)}</span>`
                     },
                     { label: 'Solicitado', render: (request) => escapeHtml(formatDate(request.fecha_solicitud)) },
                     {
@@ -315,6 +316,7 @@ export function render(container, ctx) {
       const payload = {
         nombres: values.nombres.trim(),
         apellidos: values.apellidos.trim(),
+        rut: values.rut.trim(),
         correo_electronico: values.correo_electronico.trim(),
         fecha_contratacion: values.fecha_contratacion,
         estado_laboral: values.estado_laboral,
@@ -359,6 +361,7 @@ export function render(container, ctx) {
         form.querySelector('[name="empleado_id"]').value = employee.empleado_id;
         form.querySelector('[name="nombres"]').value = employee.nombres || '';
         form.querySelector('[name="apellidos"]').value = employee.apellidos || '';
+        form.querySelector('[name="rut"]').value = employee.rut || '';
         form.querySelector('[name="correo_electronico"]').value = employee.correo_electronico || '';
         form.querySelector('[name="fecha_contratacion"]').value = employee.fecha_contratacion || '';
         form.querySelector('[name="estado_laboral"]').value = employee.estado_laboral || 'Activo';
@@ -396,7 +399,7 @@ export function render(container, ctx) {
       if (!request) return;
       updateItem('empleados', request.empleado_id, {
         banco: request.banco,
-        cuenta_bancaria: request.cuenta_bancaria
+        numero_cuenta: request.numero_cuenta
       });
       updateItem('solicitudesBanco', request.solicitud_banco_id, {
         estado: 'Aprobada',

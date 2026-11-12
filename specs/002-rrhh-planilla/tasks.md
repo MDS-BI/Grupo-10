@@ -2,7 +2,7 @@
 
 **Entrada**: Documentos de diseño desde `/specs/002-rrhh-planilla/`  
 **Prerrequisitos**: [plan.md](plan.md) (obligatorio), [spec.md](spec.md) (obligatorio para las historias de usuario), [research.md](research.md), [data-model.md](data-model.md), [contracts/](contracts/)  
-**Estado**: Implementación MVP completada — 63 pruebas automatizadas, build de producción validado y demo funcional. Las casillas se conservan como trazabilidad del plan; quedan verificaciones manuales de rendimiento (T083) y ensayo de demo (T087).
+**Estado**: Implementación MVP completada — 64 pruebas automatizadas, build de producción validado, rendimiento con 500 empleados verificado y demo funcional. Las casillas se conservan como trazabilidad del plan; queda el ensayo de demo (T087).
 **Formato**: `[ID] [P?] [HU] Descripción`
 
 - `[P]` = tarea paralelizable con otras tareas de la misma fase.
@@ -89,7 +89,7 @@
 - [ ] T024 [P] [HU3] Añadir pruebas unitarias de validación del perfil y datos bancarios en `tests/unit/hr-storage.test.js`
 - [ ] T025 [P] [HU3] Añadir pruebas de integración de actualización de perfil en `tests/integration/employee-profile.test.js`
 - [ ] T026 [HU3] Implementar la vista de perfil del empleado en `src/hr/components/employees.js`
-- [ ] T027 [HU3] Implementar la solicitud de cambio bancario con estado pendiente y aprobación de RRHH
+- [ ] T027 [HU3] Implementar la solicitud de cambio bancario en `SOLICITUDES_BANCARIAS` con banco, número de cuenta, estado pendiente y aprobación de RRHH
 - [ ] T028 [HU3] Restringir la edición de sueldo, cargo y rol desde el autoservicio del empleado
 
 **Punto de control**: HU3 funcional y con datos sensibles protegidos.
@@ -104,7 +104,7 @@
 
 - [ ] T029 [P] [HU4] Añadir pruebas unitarias de validación de contratos en `tests/unit/hr-storage.test.js`
 - [ ] T030 [P] [HU4] Añadir pruebas de integración de alta de empleado y contrato en `tests/integration/contracts.test.js`
-- [ ] T031 [HU4] Implementar el formulario de alta de empleado con datos obligatorios
+- [ ] T031 [HU4] Implementar el formulario de alta de empleado con RUT único, datos obligatorios y datos de contacto
 - [ ] T032 [HU4] Implementar el formulario de contrato con tipo, vigencia, salario y moneda
 - [ ] T033 [HU4] Generar el contrato editable desde una plantilla con los datos del colaborador
 - [ ] T034 [HU4] Implementar la regla de contrato vigente único y rechazo de superposiciones
@@ -195,7 +195,7 @@
 - [ ] T064 [P] [HU9] Añadir pruebas unitarias de cálculo y aprobación de horas extras en `tests/unit/hr-payroll.test.js`
 - [ ] T065 [P] [HU9] Añadir pruebas de integración de aprobación de horas extras en `tests/integration/overtime.test.js`
 - [ ] T066 [HU9] Implementar el panel de validación de asistencia del equipo directo
-- [ ] T067 [HU9] Aprobar horas extras y consolidarlas como concepto de nómina
+- [ ] T067 [HU9] Aprobar horas extras, actualizar `estado_validacion` y consolidar `horas_extras_aprobadas` como concepto de nómina
 - [ ] T068 [HU9] Impedir la doble aprobación y ocultar datos salariales en el panel
 
 **Punto de control**: HU9 funcional; la nómina solo consume horas extras aprobadas.
@@ -242,7 +242,7 @@
 - [ ] T080 [P] Implementar búsqueda y filtros por nombre, código, área, cargo, estado y período
 - [ ] T081 [P] Revisar accesibilidad (etiquetas, foco, contraste) y comportamiento responsivo
 - [ ] T082 [P] Sanitizar entradas y revisar la privacidad de datos sensibles
-- [ ] T083 Verificar rendimiento con 500 empleados y 500 registros de asistencia
+- [X] T083 Verificar rendimiento con 500 empleados y 500 registros de asistencia
 - [ ] T084 Ejecutar la suite completa de pruebas y corregir regresiones
 - [ ] T085 Ejecutar el build de producción y verificar que la aplicación inicia sin errores
 - [ ] T086 Actualizar `README.md` y `quickstart.md` con el estado final y las instrucciones
@@ -264,7 +264,7 @@
 - **HU4 (Fase 6)**: depende de HU1 y HU2 (departamento y cargo existentes).
 - **HU5 (Fase 7)**: depende de HU3 y HU4 (empleado y jefatura).
 - **HU6 (Fase 8)**: depende de HU4 (empleados activos).
-- **HU7 (Fase 9)**: depende de HU4 (contratos) y HU6/HU9 (asistencia y horas extras).
+- **HU7 (Fase 9)**: depende de HU4 (contratos) y HU6 (asistencia). Las horas extras aprobadas (HU9) se incorporan al cálculo cuando existan, sin bloquear la corrida base.
 - **HU8 (Fase 10)**: depende de la Fase 2; conviene implementarla antes de las pantallas sensibles.
 - **HU9 (Fase 11)**: depende de HU6 (asistencia registrada).
 - **HU10 (Fase 12)**: depende de HU4 (empleados).

@@ -49,11 +49,12 @@ export function render(container, ctx) {
         `
           <dl class="detail-list">
             <div><dt>Colaborador</dt><dd>${escapeHtml(employee.nombres)} ${escapeHtml(employee.apellidos)}</dd></div>
+            <div><dt>RUT</dt><dd>${escapeHtml(employee.rut || 'Sin registro')}</dd></div>
             <div><dt>Departamento</dt><dd>${escapeHtml(department?.nombre_departamento || 'Sin departamento')}</dd></div>
             <div><dt>Cargo</dt><dd>${escapeHtml(position?.nombre_cargo || 'Sin cargo')}</dd></div>
             <div><dt>Fecha de contratacion</dt><dd>${escapeHtml(formatDate(employee.fecha_contratacion))}</dd></div>
             <div><dt>Estado</dt><dd>${statusBadge(employee.estado_laboral)}</dd></div>
-            <div><dt>Banco registrado</dt><dd class="confidential">${escapeHtml(employee.banco || 'Sin registro')} ${escapeHtml(employee.cuenta_bancaria || '')}</dd></div>
+            <div><dt>Banco registrado</dt><dd class="confidential">${escapeHtml(employee.banco || 'Sin registro')} ${escapeHtml(employee.numero_cuenta || '')}</dd></div>
           </dl>
           <p class="muted small">El sueldo, cargo y rol no son editables desde el autoservicio.</p>
         `
@@ -82,7 +83,7 @@ export function render(container, ctx) {
         : `
           <form id="bank-form" class="form-grid" autocomplete="off">
             ${field({ label: 'Banco', name: 'banco', required: true, placeholder: 'Ej: Banco Estado' })}
-            ${field({ label: 'Cuenta bancaria', name: 'cuenta_bancaria', required: true, placeholder: 'Numero o identificacion' })}
+            ${field({ label: 'Cuenta bancaria', name: 'numero_cuenta', required: true, placeholder: 'Numero o identificacion' })}
             <div class="form-actions">
               <button type="submit" class="btn btn-primary">Enviar solicitud</button>
             </div>
@@ -128,7 +129,7 @@ export function render(container, ctx) {
     const payload = {
       empleado_id: employee.empleado_id,
       banco: values.banco.trim(),
-      cuenta_bancaria: values.cuenta_bancaria.trim(),
+      numero_cuenta: values.numero_cuenta.trim(),
       estado: 'Pendiente',
       fecha_solicitud: new Date().toISOString().slice(0, 10),
       revisado_por: null
