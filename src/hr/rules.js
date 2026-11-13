@@ -9,7 +9,6 @@ import {
 import { findById, loadCollection } from './storage.js';
 
 export const VACATION_ALLOWANCE = 15;
-export const MIN_STAFF_RATIO = 0.6;
 export const VALID_CURRENCIES = ['CLP', 'USD', 'UF'];
 export const CONTRACT_TYPES = ['Indefinido', 'Plazo fijo', 'Honorarios'];
 export const EMPLOYEE_STATES = ['Activo', 'Con licencia', 'Desvinculado'];
@@ -234,13 +233,13 @@ export function validateContract(data, options = {}) {
   return result(errors);
 }
 
-function approvedDaysForEmployee(employeeId, requests, typeIds, year) {
+function approvedDaysForType(employeeId, requests, typeId, year) {
   return requests
     .filter(
       (request) =>
         String(request.empleado_id) === String(employeeId) &&
         request.estado === 'Aprobada' &&
-        typeIds.includes(String(request.tipo_permiso_id))
+        String(request.tipo_permiso_id) === String(typeId)
     )
     .reduce((total, request) => {
       if (!request.fecha_inicio || !request.fecha_fin) return total;
@@ -249,14 +248,33 @@ function approvedDaysForEmployee(employeeId, requests, typeIds, year) {
     }, 0);
 }
 
+export function annualAllowanceForType(type) {
+  if (!type) return null;
+  const raw = type.dias_anuales ?? type.dias_maximos;
+  if (raw === null || raw === undefined || raw === '') return null;
+  const allowance = Number(raw);
+  return Number.isFinite(allowance) && allowance >= 0 ? allowance : null;
+}
+
+export function permissionBalance(employeeId, type, year, options = {}) {
+  const allowance = annualAllowanceForType(type);
+  if (allowance === null) {
+    return { hasAllowance: false, allowance: null, used: 0, balance: null };
+  }
+  const requests = options.requests || loadCollection('solicitudesPermiso');
+  const used = approvedDaysForType(employeeId, requests, type.tipo_permiso_id, year);
+  return { hasAllowance: true, allowance, used, balance: Math.max(0, allowance - used) };
+}
+
 export function vacationBalance(employeeId, year, options = {}) {
   const requests = options.requests || loadCollection('solicitudesPermiso');
   const types = options.types || loadCollection('tiposPermiso');
-  const vacationTypeIds = types
-    .filter((type) => type.nombre_tipo_permiso === 'Vacaciones')
-    .map((type) => String(type.tipo_permiso_id));
-  const used = approvedDaysForEmployee(employeeId, requests, vacationTypeIds, year);
-  return Math.max(0, VACATION_ALLOWANCE - used);
+  const vacationType = types.find((type) => type.nombre_tipo_permiso === 'Vacaciones');
+  const allowance = annualAllowanceForType(vacationType);
+  const used = vacationType
+    ? approvedDaysForType(employeeId, requests, vacationType.tipo_permiso_id, year)
+    : 0;
+  return Math.max(0, (allowance ?? VACATION_ALLOWANCE) - used);
 }
 
 export function validatePermissionRequest(data, options = {}) {
@@ -286,12 +304,12 @@ export function validatePermissionRequest(data, options = {}) {
       errors.fecha_inicio = 'El empleado ya tiene una solicitud pendiente o aprobada en ese periodo.';
     }
 
-    if (type && type.nombre_tipo_permiso === 'Vacaciones') {
+    if (type) {
       const year = Number(data.fecha_inicio.slice(0, 4));
-      const balance = vacationBalance(data.empleado_id, year, { requests, types });
+      const { hasAllowance, balance } = permissionBalance(data.empleado_id, type, year, { requests });
       const requestedDays = daysBetweenInclusive(data.fecha_inicio, data.fecha_fin);
-      if (requestedDays > balance) {
-        errors.fecha_fin = `Saldo insuficiente: dispone de ${balance} dia(s) de vacaciones.`;
+      if (hasAllowance && requestedDays > balance) {
+        errors.fecha_fin = `Saldo insuficiente: dispone de ${balance} dia(s) de ${type.nombre_tipo_permiso}.`;
       }
     }
   }
@@ -302,10 +320,20 @@ export function validatePermissionRequest(data, options = {}) {
 export function staffingConflict(request, options = {}) {
   const employees = options.employees || loadCollection('empleados');
   const requests = options.requests || loadCollection('solicitudesPermiso');
+  const departments = options.departments || loadCollection('departamentos');
   const employee = employees.find(
     (item) => String(item.empleado_id) === String(request.empleado_id)
   );
   if (!employee) return { conflict: true, reason: 'El empleado no existe.' };
+  if (employee.estado_laboral !== 'Activo') {
+    return { conflict: true, reason: 'Solo se pueden aprobar permisos de colaboradores activos.' };
+  }
+
+  const department = departments.find(
+    (item) => String(item.departamento_id) === String(employee.departamento_id)
+  );
+  const configuredMinimum = Number(department?.dotacion_minima);
+  const required = Number.isFinite(configuredMinimum) ? Math.max(0, configuredMinimum) : 1;
 
   const departmentEmployees = employees.filter(
     (item) =>
@@ -325,15 +353,11 @@ export function staffingConflict(request, options = {}) {
 
   const activeTotal = departmentEmployees.length + 1;
   const remaining = Math.max(0, activeTotal - onLeave - 1);
-  const required = Math.ceil(activeTotal * MIN_STAFF_RATIO);
   if (remaining < required) {
     return {
       conflict: true,
       reason: `La aprobacion dejaria ${remaining} colaborador(es) activo(s) en el area; se requieren al menos ${required}.`
     };
-  }
-  if (employee.estado_laboral !== 'Activo') {
-    return { conflict: true, reason: 'Solo se pueden aprobar permisos de colaboradores activos.' };
   }
   return { conflict: false, reason: '' };
 }
@@ -397,6 +421,11 @@ export function validateBenefit(data, options = {}) {
   return result(errors);
 }
 
+export function isEnrollmentActive(enrollment) {
+  const state = String(enrollment?.estado || 'activo').toLowerCase();
+  return state !== 'finalizada' && state !== 'finalizado';
+}
+
 export function validateEnrollment(data, options = {}) {
   const enrollments = options.enrollments || loadCollection('beneficiosEmpleado');
   const employees = options.employees || loadCollection('empleados');
@@ -405,8 +434,13 @@ export function validateEnrollment(data, options = {}) {
   if (!employees.some((employee) => String(employee.empleado_id) === String(data.empleado_id))) {
     errors.empleado_id = 'Debe seleccionar un colaborador valido.';
   }
-  if (!benefits.some((benefit) => String(benefit.beneficio_id) === String(data.beneficio_id))) {
+  const benefit = benefits.find(
+    (item) => String(item.beneficio_id) === String(data.beneficio_id)
+  );
+  if (!benefit) {
     errors.beneficio_id = 'Debe seleccionar un beneficio valido.';
+  } else if (benefit.estado && benefit.estado !== 'activo') {
+    errors.beneficio_id = 'El beneficio no esta vigente para nuevas inscripciones.';
   }
   if (!isValidISODate(data.fecha_inscripcion)) {
     errors.fecha_inscripcion = 'La fecha de inscripcion no es valida.';
@@ -415,7 +449,7 @@ export function validateEnrollment(data, options = {}) {
     (enrollment) =>
       String(enrollment.empleado_id) === String(data.empleado_id) &&
       String(enrollment.beneficio_id) === String(data.beneficio_id) &&
-      enrollment.estado !== 'finalizada'
+      isEnrollmentActive(enrollment)
   );
   if (duplicate) errors.beneficio_id = 'El colaborador ya tiene una inscripcion activa en ese beneficio.';
   return result(errors);
@@ -424,7 +458,7 @@ export function validateEnrollment(data, options = {}) {
 export function benefitHasActiveEnrollments(benefitId, enrollments = loadCollection('beneficiosEmpleado')) {
   return enrollments.some(
     (enrollment) =>
-      String(enrollment.beneficio_id) === String(benefitId) && enrollment.estado !== 'finalizada'
+      String(enrollment.beneficio_id) === String(benefitId) && isEnrollmentActive(enrollment)
   );
 }
 

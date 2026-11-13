@@ -3,11 +3,11 @@
 // desde el panel de administracion.
 
 const departments = [
-  { departamento_id: 1, empresa_id: 1, nombre_departamento: 'Administracion', codigo_departamento: 'ADM', jefe_departamento_id: 5 },
-  { departamento_id: 2, empresa_id: 1, nombre_departamento: 'Recursos Humanos', codigo_departamento: 'RRHH', jefe_departamento_id: 1 },
-  { departamento_id: 3, empresa_id: 1, nombre_departamento: 'Tecnologia', codigo_departamento: 'TI', jefe_departamento_id: 2 },
-  { departamento_id: 4, empresa_id: 1, nombre_departamento: 'Ventas', codigo_departamento: 'VEN', jefe_departamento_id: 7 },
-  { departamento_id: 5, empresa_id: 1, nombre_departamento: 'Finanzas', codigo_departamento: 'FIN', jefe_departamento_id: 4 }
+  { departamento_id: 1, empresa_id: 1, nombre_departamento: 'Administracion', codigo_departamento: 'ADM', jefe_departamento_id: 5, dotacion_minima: 1 },
+  { departamento_id: 2, empresa_id: 1, nombre_departamento: 'Recursos Humanos', codigo_departamento: 'RRHH', jefe_departamento_id: 1, dotacion_minima: 1 },
+  { departamento_id: 3, empresa_id: 1, nombre_departamento: 'Tecnologia', codigo_departamento: 'TI', jefe_departamento_id: 2, dotacion_minima: 1 },
+  { departamento_id: 4, empresa_id: 1, nombre_departamento: 'Ventas', codigo_departamento: 'VEN', jefe_departamento_id: 7, dotacion_minima: 1 },
+  { departamento_id: 5, empresa_id: 1, nombre_departamento: 'Finanzas', codigo_departamento: 'FIN', jefe_departamento_id: 4, dotacion_minima: 1 }
 ];
 
 const positions = [
@@ -197,9 +197,9 @@ const contracts = [
 ];
 
 const benefits = [
-  { beneficio_id: 1, nombre_beneficio: 'Seguro complementario de salud', proveedor: 'Consalud', costo: 45000 },
-  { beneficio_id: 2, nombre_beneficio: 'Bono de colacion', proveedor: 'Sodexo', costo: 80000 },
-  { beneficio_id: 3, nombre_beneficio: 'Membresia gimnasio', proveedor: 'SmartFit', costo: 25000 }
+  { beneficio_id: 1, nombre_beneficio: 'Seguro complementario de salud', proveedor: 'Consalud', costo: 45000, estado: 'activo' },
+  { beneficio_id: 2, nombre_beneficio: 'Bono de colacion', proveedor: 'Sodexo', costo: 80000, estado: 'activo' },
+  { beneficio_id: 3, nombre_beneficio: 'Membresia gimnasio', proveedor: 'SmartFit', costo: 25000, estado: 'activo' }
 ];
 
 const employeeBenefits = [
@@ -211,10 +211,10 @@ const employeeBenefits = [
 ];
 
 const permissionTypes = [
-  { tipo_permiso_id: 1, nombre_tipo_permiso: 'Vacaciones', es_remunerado: true, dias_maximos: 15 },
-  { tipo_permiso_id: 2, nombre_tipo_permiso: 'Licencia medica', es_remunerado: true, dias_maximos: 10 },
-  { tipo_permiso_id: 3, nombre_tipo_permiso: 'Permiso administrativo', es_remunerado: true, dias_maximos: 5 },
-  { tipo_permiso_id: 4, nombre_tipo_permiso: 'Permiso sin goce de sueldo', es_remunerado: false, dias_maximos: 10 }
+  { tipo_permiso_id: 1, nombre_tipo_permiso: 'Vacaciones', es_remunerado: true, dias_anuales: 15 },
+  { tipo_permiso_id: 2, nombre_tipo_permiso: 'Licencia medica', es_remunerado: true, dias_anuales: 10 },
+  { tipo_permiso_id: 3, nombre_tipo_permiso: 'Permiso administrativo', es_remunerado: true, dias_anuales: 5 },
+  { tipo_permiso_id: 4, nombre_tipo_permiso: 'Permiso sin goce de sueldo', es_remunerado: false, dias_anuales: 10 }
 ];
 
 const permissionRequests = [

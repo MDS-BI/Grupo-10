@@ -29,6 +29,7 @@ export function render(container, ctx) {
   const types = loadCollection('tiposPermiso');
   const requests = loadCollection('solicitudesPermiso');
   const employees = loadCollection('empleados');
+  const departments = loadCollection('departamentos');
   const canApprove = canApproveRequests(user);
   const canCreateForOthers = user.rol === 'admin_rrhh';
 
@@ -215,7 +216,7 @@ export function render(container, ctx) {
             `
               <div class="table-wrapper">
                 <table class="data-table">
-                  <thead><tr><th>Tipo</th><th>Remunerado</th><th>Dias maximos</th></tr></thead>
+                  <thead><tr><th>Tipo</th><th>Remunerado</th><th>Derecho anual</th></tr></thead>
                   <tbody>
                     ${types
                       .map(
@@ -223,7 +224,7 @@ export function render(container, ctx) {
                           <tr>
                             <td>${escapeHtml(type.nombre_tipo_permiso)}</td>
                             <td>${type.es_remunerado ? 'Si' : 'No'}</td>
-                            <td>${type.dias_maximos || '-'}</td>
+                            <td>${type.dias_anuales ?? type.dias_maximos ?? '-'}</td>
                           </tr>
                         `
                       )
@@ -243,7 +244,7 @@ export function render(container, ctx) {
                   value: 'true',
                   required: true
                 })}
-                ${field({ label: 'Dias maximos', name: 'dias_maximos', type: 'number', min: 1, value: '5' })}
+                ${field({ label: 'Derecho anual (dias, vacio = sin saldo)', name: 'dias_anuales', type: 'number', min: 1, value: '5' })}
                 <button type="submit" class="btn btn-primary">Agregar tipo</button>
               </form>
             `
@@ -294,7 +295,7 @@ export function render(container, ctx) {
         (item) => String(item.solicitud_permiso_id) === String(button.dataset.approve)
       );
       if (!request) return;
-      const conflict = staffingConflict(request, { employees, requests });
+      const conflict = staffingConflict(request, { employees, requests, departments });
       if (conflict.conflict) {
         showFeedback(feedbackSlot, conflict.reason);
         return;
@@ -342,7 +343,7 @@ export function render(container, ctx) {
       addItem('tiposPermiso', {
         nombre_tipo_permiso: values.nombre_tipo_permiso.trim(),
         es_remunerado: values.es_remunerado === 'true',
-        dias_maximos: Number(values.dias_maximos) || 1
+        dias_anuales: values.dias_anuales === '' ? null : Number(values.dias_anuales)
       });
       toast('Tipo de permiso agregado.');
       ctx.refresh();

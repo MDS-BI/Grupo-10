@@ -2,6 +2,7 @@ import { addItem, deleteItem, loadCollection, updateItem } from '../storage.js';
 import {
   benefitHasActiveEnrollments,
   employeeName,
+  isEnrollmentActive,
   validateBenefit,
   validateEnrollment
 } from '../rules.js';
@@ -43,7 +44,7 @@ export function render(container, ctx) {
         .filter(
           (enrollment) =>
             String(enrollment.empleado_id) === String(employee.empleado_id) &&
-            enrollment.estado !== 'finalizada'
+            isEnrollmentActive(enrollment)
         )
         .reduce((sum, enrollment) => {
           const benefit = benefits.find(
@@ -85,7 +86,7 @@ export function render(container, ctx) {
                   enrollments.filter(
                     (enrollment) =>
                       String(enrollment.beneficio_id) === String(benefit.beneficio_id) &&
-                      enrollment.estado !== 'finalizada'
+                      isEnrollmentActive(enrollment)
                   ).length
                 )
             },
@@ -153,10 +154,12 @@ export function render(container, ctx) {
                 ${selectField({
                   label: 'Beneficio',
                   name: 'beneficio_id',
-                  options: benefits.map((benefit) => ({
-                    value: benefit.beneficio_id,
-                    label: `${benefit.nombre_beneficio} (${formatCLP(benefit.costo)})`
-                  })),
+                  options: benefits
+                    .filter((benefit) => benefit.estado !== 'inactivo')
+                    .map((benefit) => ({
+                      value: benefit.beneficio_id,
+                      label: `${benefit.nombre_beneficio} (${formatCLP(benefit.costo)})`
+                    })),
                   required: true
                 })}
                 ${field({ label: 'Fecha de inscripcion', name: 'fecha_inscripcion', type: 'date', value: todayISO(), required: true })}
@@ -194,7 +197,7 @@ export function render(container, ctx) {
                 {
                   label: 'Acciones',
                   render: (enrollment) =>
-                    enrollment.estado === 'finalizada'
+                    !isEnrollmentActive(enrollment)
                       ? '<span class="muted">Finalizada</span>'
                       : `<button type="button" class="btn btn-small" data-finish-enrollment="${enrollment.beneficio_empleado_id}">Finalizar</button>`
                 }
@@ -243,7 +246,8 @@ export function render(container, ctx) {
     const payload = {
       nombre_beneficio: values.nombre_beneficio.trim(),
       proveedor: values.proveedor.trim(),
-      costo: Number(values.costo)
+      costo: Number(values.costo),
+      ...(editingId ? {} : { estado: 'activo' })
     };
     const validation = validateBenefit(payload, { benefits, editingId });
     if (!validation.valid) {

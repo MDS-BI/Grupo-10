@@ -48,6 +48,21 @@ describe('HU10 - beneficios', () => {
     expect(document.querySelector('#benefit-feedback').textContent).toContain('inscripcion activa');
   });
 
+  test('no ofrece beneficios inactivos para nuevas inscripciones', async () => {
+    const { app, storage } = await bootApp('admin_rrhh');
+    storage.addItem('beneficios', {
+      nombre_beneficio: 'Beneficio inactivo',
+      proveedor: 'Proveedor X',
+      costo: 1000,
+      estado: 'inactivo'
+    });
+    app.navigate('beneficios');
+    const options = [
+      ...document.querySelectorAll('#enrollment-form [name="beneficio_id"] option')
+    ].map((option) => option.textContent);
+    expect(options.some((label) => label.includes('Beneficio inactivo'))).toBe(false);
+  });
+
   test('finaliza una inscripcion y luego permite eliminar un beneficio sin inscripciones activas', async () => {
     const { app, storage } = await bootApp('admin_rrhh');
     app.navigate('beneficios');
