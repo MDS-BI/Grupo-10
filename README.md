@@ -156,7 +156,7 @@ La aplicación se abre en la URL local que entrega Vite (por defecto `http://loc
 npm test
 ```
 
-La suite considera pruebas unitarias de reglas de negocio y pruebas de integración de los flujos de cada historia de usuario. Al cierre de esta entrega se ejecutan **63 pruebas** sobre 15 archivos.
+La suite considera pruebas unitarias de reglas de negocio y pruebas de integración de los flujos de cada historia de usuario. Al cierre de esta entrega se ejecutan **72 pruebas** sobre 16 archivos.
 
 ```bash
 npm run build
@@ -178,7 +178,7 @@ El flujo sugerido para la demo está en [`specs/002-rrhh-planilla/quickstart.md`
 | Plan de implementación | Completado |
 | Tareas técnicas | Completado |
 | Implementación del MVP | Completado |
-| Pruebas automatizadas | Completado (63 pruebas) |
+| Pruebas automatizadas | Completado (72 pruebas) |
 | Demo integrada | Completado |
 
 ## Documentación

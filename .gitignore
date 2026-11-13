@@ -3,8 +3,11 @@ dist/
 build/
 coverage/
 .vscode/
+.idea/
 .env
 .env*
 *.log
+*.tmp
+*.swp
 .DS_Store
 Thumbs.db

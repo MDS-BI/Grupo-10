@@ -2,7 +2,7 @@
 
 ## Estado
 
-El módulo se encuentra **implementado y funcional** como MVP académico. La aplicación incluye los cuatro roles demo, datos semilla, persistencia en `localStorage`, auditoría y 63 pruebas automatizadas.
+El módulo se encuentra **implementado y funcional** como MVP académico. La aplicación incluye los cuatro roles demo, datos semilla, persistencia en `localStorage`, auditoría y 72 pruebas automatizadas.
 
 ## Configuración
 
@@ -25,20 +25,15 @@ El módulo se encuentra **implementado y funcional** como MVP académico. La apl
 | `gonzalo.paredes` | Jefatura / Supervisor | Gonzalo Paredes |
 | `javiera.nunez` | Empleado | Javiera Núñez |
 
-## Flujo de demostración sugerido
+## Flujo de demostración sugerido (5 minutos)
 
-1. Iniciar sesión como **Administrador de RRHH**.
-2. Crear un departamento y un cargo (HU1 y HU2).
-3. Registrar un colaborador y generar su contrato (HU4).
-4. Iniciar sesión como **Empleado** y actualizar los datos de contacto (HU3).
-5. Enviar una solicitud de permiso (HU5).
-6. Iniciar sesión como **Jefatura** y aprobar o rechazar la solicitud (HU5).
-7. Registrar la asistencia diaria del equipo (HU6).
-8. Validar y aprobar horas extras (HU9).
-9. Iniciar sesión como **Encargado de Nómina**, crear un período y ejecutar la liquidación (HU7).
-10. Verificar la papeleta desde la sesión del empleado (HU7).
-11. Revisar el panel de RRHH con dotación, ausentismo y costo de nómina.
-12. Inscribir a un colaborador en un beneficio (HU10) y registrar una evaluación de desempeño (HU11).
+1. **Administrador de RRHH** (0:00–1:00): iniciar sesión, crear un departamento y un cargo (HU1 y HU2), registrar un colaborador y generar su contrato (HU4).
+2. **Empleado** (1:00–1:45): actualizar los datos de contacto (HU3) y enviar una solicitud de permiso (HU5).
+3. **Jefatura** (1:45–2:45): aprobar o rechazar la solicitud con comentario (HU5), registrar la asistencia diaria (HU6) y validar horas extras (HU9).
+4. **Encargado de Nómina** (2:45–3:45): crear un período y ejecutar la liquidación (HU7); verificar la papeleta desde la sesión del empleado.
+5. **Administrador de RRHH** (3:45–5:00): revisar el panel con dotación, ausentismo y costo de nómina, inscribir a un colaborador en un beneficio (HU10) y registrar una evaluación de desempeño (HU11).
+
+> **Ensayo automatizado**: los flujos de las 11 HU están cubiertos por las pruebas de integración de `tests/integration/`; ejecutar `npm test` antes de la demo para confirmar el guion completo.
 
 ## Validaciones que se deben comprobar
 
