@@ -23,3 +23,20 @@ Proximos pasos:
 - hacer primera implmentacion, registar modificaciones/incremental y volver al spec
 - dividir el grupo entre modificaciones (ajustes previos) e incremental (nueva funcionalidad)
 - integrar nueva version en 2 semanas
+
+Feedback Avance 03 (16/11/26)
+
+Cambios en la especificacion:
+
+- spec.md y tasks.md son nuevos (carpeta 002-rrhh-planilla): 11 HU, FR-001 en adelante y T001-T087, todas marcadas [X].
+- Los cambios del 12/11 (RUT unico, datos bancarios, estado_validacion, horas_extras_aprobadas) estan en FR-006, FR-010, FR-026 y T031, T067. Ambos archivos son coherentes entre si, pero spec.md sigue en "Borrador" mientras tasks.md declara el MVP completado.
+
+Consistencia sitio-especificacion:
+
+- T060 (pantalla de usuarios y roles) figura hecha, pero `VIEWS` en src/app.js no tiene ninguna ruta de usuarios. Solo se ve `changeRole` en la logica y su prueba. No verificable en las vistas no incluidas.
+- HU10 (escenario 5) prohibe eliminar un beneficio con inscripciones historicas. tests/integration/benefits.test.js elimina el beneficio 3 tras finalizar su inscripcion.
+- La vista `auditoria` (src/hr/components/audit-view.js) no tiene HU ni tarea. FR-034 solo exige auditar la reapertura.
+- T084 dice "suite completa", pero vitest.config.mjs excluye los tests del modulo 001. Para T083 (500 empleados) no se ve ninguna prueba.
+- hacer mejoras de funcionalidad e interfaz de usuario, incluir data simulada para probar campos, incluir mejoras de estilo, transicion, navegacion, etcetera.
+
+Presentacion de MVP final en 2 semanas.
